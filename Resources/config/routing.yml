@@ -1,0 +1,3 @@
+maci_mailer_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: MaciMailerBundle:Default:index }

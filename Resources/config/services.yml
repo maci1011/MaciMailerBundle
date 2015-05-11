@@ -1,0 +1,4 @@
+services:
+#    maci_mailer.example:
+#        class: Maci\MailerBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]
