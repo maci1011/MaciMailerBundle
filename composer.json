@@ -1,0 +1,27 @@
+{
+    "name": "maci/mailer-bundle",
+    "type": "symfony-bundle",
+    "description": "Symfony MaciMailerBundle",
+    "keywords": ["Mailer Generator", "mailer", "maci", "bootstrap"],
+    "homepage": "https://github.com/maci1011/MaciMailerBundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Maci",
+            "email": "info@macister.com",
+            "homepage": "http://macister.com"
+        }
+    ],
+    "require": {
+    },
+    "require-dev": {
+    },
+    "suggest": {
+    },
+    "autoload": {
+        "psr-0": { "Maci\\MailerBundle": "" }
+    },
+    "target-dir": "Maci/MailerBundle",
+    "extra": {
+    }
+}
