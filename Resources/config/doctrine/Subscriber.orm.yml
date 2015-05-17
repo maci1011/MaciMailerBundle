@@ -1,0 +1,39 @@
+
+Maci\MailerBundle\Entity\Subscriber:
+    type:  entity
+    table: maci_mailer_subscriber
+    repositoryClass: Maci\MailerBundle\Repository\SubscriberRepository
+    id:
+        id:
+            type: integer
+            generator:
+                strategy: AUTO
+    fields:
+        name:
+            type: string
+            length: 63
+            nullable: true
+        mail:
+            type: string
+            length: 63
+            nullable: true
+        locale:
+            type: string
+            length: 10
+        created:
+            type: datetime
+        updated:
+            type: datetime
+        removed:
+            type: boolean
+    manyToOne:
+        user:
+            targetEntity: Maci\UserBundle\Entity\User
+            joinColumn:
+                name: user_id
+                referencedColumnName: id
+    lifecycleCallbacks:
+        prePersist: [ setUpdatedValue, setCreatedValue ]
+        preUpdate: [ setUpdatedValue ]
+
+

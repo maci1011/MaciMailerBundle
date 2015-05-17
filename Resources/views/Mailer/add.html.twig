@@ -1,0 +1,16 @@
+
+{% extends "MaciMailerBundle::layout.html.twig" %}
+
+
+{% block title %}
+
+{{ 'mailer.add_subscribers.meta_title' | matra('Mailer Add Subscribers') }}
+
+{% endblock %}
+
+
+{% block content %}
+
+{{ render(controller('MaciMailerBundle:Default:subscribeForm')) }}
+
+{% endblock %}

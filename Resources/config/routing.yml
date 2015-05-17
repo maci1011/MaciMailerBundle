@@ -1,3 +1,20 @@
-maci_mailer_homepage:
-    path:     /hello/{name}
+
+maci_mailer_add_subscribers:
+    path:     /admin/mailer/subscribers/add
+    defaults: { _controller: MaciMailerBundle:Default:add }
+
+maci_mailer_subscribers:
+    path:     /admin/mailer/subscribers
+    defaults: { _controller: MaciMailerBundle:Default:list }
+
+maci_mailer:
+    path:     /admin/mailer
     defaults: { _controller: MaciMailerBundle:Default:index }
+
+maci_mailer_show:
+    path:     /mailer/show/{token}
+    defaults: { _controller: MaciMailerBundle:Default:show }
+
+maci_mailer_subscribe:
+    path:     /mailer/subscribe
+    defaults: { _controller: MaciMailerBundle:Default:subscribeForm }

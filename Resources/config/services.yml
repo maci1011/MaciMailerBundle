@@ -1,4 +1,24 @@
+
 services:
-#    maci_mailer.example:
-#        class: Maci\MailerBundle\Example
-#        arguments: [@service_id, "plain_value", %parameter%]
+
+    maci.mailer:
+        class: Maci\MailerBundle\Controller\MailerController
+        arguments: ["@templating","@form.factory","@doctrine.orm.entity_manager","@security.context"]
+
+    maci_mailer.menu_builder:
+        class: Maci\MailerBundle\Menu\MailerMenuBuilder
+        arguments: ["@knp_menu.factory","@maci.translator"]
+
+    maci_mailer.menu.main:
+        class: Knp\Menu\MenuItem
+        factory_service: maci_mailer.menu_builder
+        factory_method: createLeftMenu
+        arguments: ["@request"]
+        scope: request
+        tags:
+            - { name: knp_menu.menu, alias: mailer_left }
+
+    maci_mailer.form.type.subscribe:
+        class: Maci\MailerBundle\Form\Type\SubscribeType
+        tags:
+            - { name: form.type, alias: subscribe }
