@@ -14,18 +14,40 @@ class DefaultController extends Controller
         return $this->render('MaciMailerBundle:Mailer:index.html.twig');
     }
 
-    public function listAction()
+    public function notificationsAction()
+    {
+        $list = $this->getDoctrine()->getManager()
+            ->getRepository('MaciMailerBundle:Mail')
+            ->getNotifications();
+
+        return $this->render('MaciMailerBundle:Mailer:notifications.html.twig', array('list' => $list));
+    }
+
+    public function subscribersAction()
     {
         $list = $this->getDoctrine()->getManager()
             ->getRepository('MaciMailerBundle:Subscriber')
             ->getList();
 
-        return $this->render('MaciMailerBundle:Mailer:list.html.twig', array('list' => $list));
+        return $this->render('MaciMailerBundle:Mailer:subscribers.html.twig', array('list' => $list));
+    }
+
+    public function userMailsAction()
+    {
+        $list = $this->getDoctrine()->getManager()
+            ->getRepository('MaciMailerBundle:Mail')
+            ->getUserMails( $this->getUser() );
+
+        return $this->render('MaciMailerBundle:Mailer:user_mails.html.twig', array('list' => $list));
     }
 
     public function showAction($token)
     {
-        return $this->render('MaciMailerBundle:Mailer:show.html.twig');
+        $mail = $this->getDoctrine()->getManager()
+            ->getRepository('MaciMailerBundle:Mail')
+            ->findOneByToken( $token );
+
+        return $this->render('MaciMailerBundle:Mailer:show.html.twig', array('mail' => $mail));
     }
 
     public function addAction($token)

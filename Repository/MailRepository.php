@@ -10,4 +10,26 @@ namespace Maci\MailerBundle\Repository;
  */
 class MailRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function getUserMails($user)
+    {
+        $q = $this->getEntityManager()
+            ->createQuery(
+                'SELECT e FROM MaciMailerBundle:Mail e WHERE e.user = :user ORDER BY e.created DESC'
+            )
+            ->setParameter('user', $user)
+        ;
+
+        return $q->getResult();
+    }
+
+    public function getNotifications()
+    {
+        $q = $this->getEntityManager()
+            ->createQuery(
+                'SELECT e FROM MaciMailerBundle:Mail e WHERE e.user IS NOT NULL ORDER BY e.created DESC'
+            )
+        ;
+
+        return $q->getResult();
+    }
 }

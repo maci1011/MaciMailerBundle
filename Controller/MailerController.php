@@ -34,13 +34,19 @@ class MailerController extends Controller
      */
     public function getSwiftMessage($mail)
     {
+        $to = $mail->getCurrentTo();
+
+        if (!$to) {
+            return false;
+        }
+
         $message = \Swift_Message::newInstance()
             ->setSubject($mail->getSubject())
             ->setFrom($mail->getFrom(), $mail->getHeader())
-            ->setTo($mail->getCurrentTo(), $mail->getCurrentToHeader())
+            ->setTo($to[0], $to[1])
             ->setBcc($mail->getBcc())
-            ->setBody($mail->getText())
-            ->addPart($mail->getContent(), 'text/html')
+            ->setBody($mail->getContent(), 'text/html')
+            ->addPart($mail->getText(), 'text/plain')
         ;
 
         return $message;

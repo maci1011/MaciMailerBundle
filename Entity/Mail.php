@@ -35,7 +35,7 @@ class Mail
     /**
      * @var array
      */
-    private $to;
+    private $_to;
 
     /**
      * @var string
@@ -45,12 +45,12 @@ class Mail
     /**
      * @var integer
      */
-    private $index;
+    private $_index;
 
     /**
      * @var string
      */
-    private $from;
+    private $_from;
 
     /**
      * @var string
@@ -113,7 +113,7 @@ class Mail
             'MaciMailerBundle_Entity_Mail-' . rand(10000, 99999) . '-' . 
             date('h') . date('i') . date('s') . date('m') . date('d') . date('Y')
         );
-        $this->index = 0;
+        $this->_index = 0;
         $this->public = false;
         $this->removed = false;
     }
@@ -233,24 +233,24 @@ class Mail
      */
     public function setTo($to)
     {
-        $this->to = $to;
+        $this->_to = $to;
 
         return $this;
     }
 
     public function addTo($to, $int = null)
     {
-        if (!is_array($this->to)) {
-            $this->to = array();
+        if (!is_array($this->_to)) {
+            $this->_to = array();
         }
 
         if (is_array($to)) {
-            $this->to = array_merge($this->to, $to);
+            $this->_to = array_merge($this->_to, $to);
         } else {
             if (!is_null($int)) {
-                $this->to[$to] = $int;
+                $this->_to[$to] = $int;
             } else {
-                $this->to[$to] = null;
+                $this->_to[$to] = null;
             }
         }
 
@@ -264,41 +264,39 @@ class Mail
      */
     public function getTo()
     {
-        return $this->to;
+        return $this->_to;
     }
 
     public function getToMails()
     {
-        return array_keys($this->to);
+        return array_keys($this->_to);
     }
 
     public function getCurrentTo()
     {
         if (!$this->isFinish()) {
-            $mails = $this->getToMails();
-            return $mails[$this->index];
+            $i = 0;
+            $to = false;
+            foreach ($this->_to as $key => $value) {
+                if ( $i === $this->_index ) {
+                    $to = array($key, $value);
+                    break;
+                }
+                $i++;
+            }
+            return $to;
         }
         return false;
     }
 
-    public function getCurrentToHeader()
-    {
-        if (!$this->isFinish()) {
-            if (strlen($this->to[$this->index])) {
-                return $this->to[$this->index];
-            }
-        }
-        return null;
-    }
-
     public function getToLength()
     {
-        return count($this->to);
+        return count($this->_to);
     }
 
     public function getToLeftovers()
     {
-        return ( $this->getToLength() - $this->index );
+        return ( $this->getToLength() - $this->_index );
     }
 
     /**
@@ -334,14 +332,14 @@ class Mail
      */
     public function setIndex($index)
     {
-        $this->index = $index;
+        $this->_index = $index;
 
         return $this;
     }
 
     public function increaseIndex($index = 1)
     {
-        $this->index += $index;
+        $this->_index += $index;
 
         return $this;
     }
@@ -351,7 +349,7 @@ class Mail
      */
     public function end()
     {
-        $this->index = $this->getToLength();
+        $this->_index = $this->getToLength();
 
         return $this;
     }
@@ -363,7 +361,7 @@ class Mail
      */
     public function getIndex()
     {
-        return $this->index;
+        return $this->_index;
     }
 
     /**
@@ -375,7 +373,7 @@ class Mail
      */
     public function setFrom($from, $header = false)
     {
-        $this->from = $from;
+        $this->_from = $from;
 
         if ($header) {
             $this->header = $header;
@@ -391,7 +389,7 @@ class Mail
      */
     public function getFrom()
     {
-        return $this->from;
+        return $this->_from;
     }
 
     /**
@@ -645,6 +643,6 @@ class Mail
      */
     public function isFinish()
     {
-        return !( $this->index < $this->getToLength() );
+        return !( $this->_index < $this->getToLength() );
     }
 }

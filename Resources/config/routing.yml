@@ -1,15 +1,23 @@
 
+maci_mailer_notifications:
+    path:     /admin/mailer/notifications
+    defaults: { _controller: MaciMailerBundle:Default:notifications }
+
 maci_mailer_add_subscribers:
     path:     /admin/mailer/subscribers/add
     defaults: { _controller: MaciMailerBundle:Default:add }
 
 maci_mailer_subscribers:
     path:     /admin/mailer/subscribers
-    defaults: { _controller: MaciMailerBundle:Default:list }
+    defaults: { _controller: MaciMailerBundle:Default:subscribers }
 
 maci_mailer:
     path:     /admin/mailer
     defaults: { _controller: MaciMailerBundle:Default:index }
+
+maci_mailer_user_mails:
+    path:     /user/mails
+    defaults: { _controller: MaciMailerBundle:Default:userMails }
 
 maci_mailer_show:
     path:     /mailer/show/{token}

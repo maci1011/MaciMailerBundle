@@ -3,7 +3,7 @@ services:
 
     maci.mailer:
         class: Maci\MailerBundle\Controller\MailerController
-        arguments: ["@templating","@form.factory","@doctrine.orm.entity_manager","@security.context"]
+        arguments: ["@doctrine.orm.entity_manager","@security.context"]
 
     maci_mailer.menu_builder:
         class: Maci\MailerBundle\Menu\MailerMenuBuilder

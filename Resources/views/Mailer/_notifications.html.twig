@@ -1,0 +1,51 @@
+
+{% if list|length %}
+
+
+<div class="row list-header">
+
+	<div class="col-xs-5">
+		<span>Subject</span>
+	</div>
+
+	<div class="col-xs-3">
+		<span>User</span>
+	</div>
+
+	<div class="col-xs-2">
+		<span>Date</span>
+	</div>
+
+	<div class="col-xs-2">
+		&nbsp;
+	</div>
+
+</div>
+
+
+{% for item in list %}
+
+<div class="row list-item">
+
+	<div class="col-xs-5">
+		<span>{{ item.subject }}</span>
+	</div>
+
+	<div class="col-xs-3">
+		<span>{{ item.user }}</span>
+	</div>
+
+	<div class="col-xs-2">
+		<span>{{ item.created|date('d/m/Y') }}</span>
+	</div>
+
+	<div class="col-xs-2">
+		<span><a class="btn btn-default" href="{{ path('maci_mailer_show', {'token': item.token}) }}" target="_blank">Show</a></span>
+	</div>
+
+</div>
+
+{% endfor %}
+
+
+{% endif %}

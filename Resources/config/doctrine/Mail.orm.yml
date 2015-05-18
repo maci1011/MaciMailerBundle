@@ -19,16 +19,16 @@ Maci\MailerBundle\Entity\Mail:
         token:
             type: string
             length: 127
-        to:
+        _to:
             type: array
             nullable: true
         header:
             type: string
             length: 63
             nullable: true
-        index:
+        _index:
             type: smallint
-        from:
+        _from:
             type: string
             length: 63
             nullable: true
