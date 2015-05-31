@@ -109,6 +109,7 @@ class Mail
     public function __construct()
     {
         $this->template = 'MaciMailerBundle:Templates:default.html.twig';
+        $this->type = 'mail';
         $this->token = md5(
             'MaciMailerBundle_Entity_Mail-' . rand(10000, 99999) . '-' . 
             date('h') . date('i') . date('s') . date('m') . date('d') . date('Y')

@@ -21,15 +21,4 @@ class MailRepository extends \Doctrine\ORM\EntityRepository
 
         return $q->getResult();
     }
-
-    public function getNotifications()
-    {
-        $q = $this->getEntityManager()
-            ->createQuery(
-                'SELECT e FROM MaciMailerBundle:Mail e WHERE e.user IS NOT NULL ORDER BY e.created DESC'
-            )
-        ;
-
-        return $q->getResult();
-    }
 }

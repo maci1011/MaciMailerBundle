@@ -18,7 +18,7 @@ class DefaultController extends Controller
     {
         $list = $this->getDoctrine()->getManager()
             ->getRepository('MaciMailerBundle:Mail')
-            ->getNotifications();
+            ->findByType( 'notify' );
 
         return $this->render('MaciMailerBundle:Mailer:notifications.html.twig', array('list' => $list));
     }
@@ -48,6 +48,25 @@ class DefaultController extends Controller
             ->findOneByToken( $token );
 
         return $this->render('MaciMailerBundle:Mailer:show.html.twig', array('mail' => $mail));
+    }
+
+    public function templatesAction()
+    {
+        // $list = $this->getDoctrine()->getManager()
+        //     ->getRepository('MaciMailerBundle:Mail')
+        //     ->findByType( 'template' );
+
+        // return $this->render('MaciMailerBundle:Mailer:templates.html.twig', array('list' => $list));
+
+        $mail = $this->getDoctrine()->getManager()
+            ->getRepository('MaciMailerBundle:Mail')
+            ->findOneById( 4 );
+
+        $cart = $this->getDoctrine()->getManager()
+            ->getRepository('MaciOrderBundle:Order')
+            ->findOneById( 44 );
+
+        return $this->render('MaciOrderBundle:Email:confirmation_email.html.twig', array('mail' => $mail, 'order' => $cart));
     }
 
     public function addAction($token)

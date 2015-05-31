@@ -1,0 +1,16 @@
+
+{% extends "MaciMailerBundle::layout.html.twig" %}
+
+
+{% block content %}
+
+<section class="page_container row">
+
+<h3>Templates</h3>
+
+{% include 'MaciMailerBundle:Mailer:_user_mails.html.twig' with {'list': list} %}
+
+</section>
+
+{% endblock %}
+
