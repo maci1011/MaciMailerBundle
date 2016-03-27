@@ -30,10 +30,6 @@ class MailerMenuBuilder
 
 		$menu->setChildrenAttribute('class', 'nav');
 
-		$menu->addChild($this->translator->getText('menu.home', 'Home'), array('route' => 'maci_homepage'));
-
-		$menu->addChild($this->translator->getText('menu.admin.mailer', 'Mailer Home'), array('route' => 'maci_mailer'));
-
 		$menu->addChild($this->translator->getText('menu.admin.mailer.notifications', 'Notifications'), array('route' => 'maci_mailer_notifications'));
 
 		$menu->addChild($this->translator->getText('menu.admin.mailer.templates', 'Templates'), array('route' => 'maci_mailer_templates'));
