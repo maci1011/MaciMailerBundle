@@ -1,15 +1,18 @@
 
 {% extends "MaciAdminBundle::layout.html.twig" %}
 
-{% block top_menu %}
 
+{% block top_menu %}
 <nav>
     <ul class="nav navbar-nav">
-        <li><a href="{{ path('maci_mailer') }}">Mailer</a></li>
-        <li><a href="{{ path('homepage') }}">Homepage</a></li>
+        <li>
+            <a id="menu-toggle" href="#">MAILER</a>
+        </li>
+        <li>
+            <a href="{{ path('homepage') }}">Homepage</a>
+        </li>
     </ul>
 </nav>
-
 {% endblock top_menu %}
 
 
@@ -20,3 +23,4 @@
 <nav>{{ knp_menu_render('mailer_left', {'currentClass': 'active'}) }}</nav>
 
 {% endblock %}
+

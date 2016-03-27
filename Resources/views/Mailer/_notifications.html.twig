@@ -2,22 +2,29 @@
 {% if list|length %}
 
 
+<div class="list-default">
+
+
 <div class="row list-header">
 
-	<div class="col-xs-5">
-		<span>Subject</span>
+	<div class="col-xs-1 tab-hd-id">
+		<span class="list-title">Id</span>
+	</div>
+
+	<div class="col-xs-4">
+		<span class="list-title">Subject</span>
 	</div>
 
 	<div class="col-xs-3">
-		<span>User</span>
+		<span class="list-title">User</span>
 	</div>
 
 	<div class="col-xs-2">
-		<span>Date</span>
+		<span class="list-title">Date</span>
 	</div>
 
 	<div class="col-xs-2">
-		&nbsp;
+		<span class="list-title">Actions</span>
 	</div>
 
 </div>
@@ -25,27 +32,36 @@
 
 {% for item in list %}
 
-<div class="row list-item">
+<div class="row list-item {% if loop.index0 is even %}even{% else %}odd{% endif %}">
 
-	<div class="col-xs-5">
-		<span>{{ item.subject }}</span>
+	<div class="col-xs-1 tab-td-id">
+		<p>{{ item.id }}</p>
+	</div>
+
+	<div class="col-xs-4">
+		<p>{{ item.subject }}</p>
 	</div>
 
 	<div class="col-xs-3">
-		<span>{{ item.user }}</span>
+		<p>{{ item.user }}</p>
 	</div>
 
 	<div class="col-xs-2">
-		<span>{{ item.created|date('d/m/Y') }}</span>
+		<p>{{ item.created|date('d/m/Y') }}</p>
 	</div>
 
 	<div class="col-xs-2">
-		<span><a class="btn btn-default" href="{{ path('maci_mailer_show', {'token': item.token}) }}" target="_blank">Show</a></span>
+		<a class="btn btn-sm" href="{{ path('maci_mailer_show', {'token': item.token}) }}" target="_blank">
+			<span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Show
+		</a>
 	</div>
 
 </div>
 
 {% endfor %}
+
+
+</div>
 
 
 {% endif %}
