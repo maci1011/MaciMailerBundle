@@ -1,12 +1,12 @@
 
-{% extends "MaciMailerBundle::layout.html.twig" %}
+{% extends "FOSUserBundle::layout.html.twig" %}
 
 
 {% block content %}
 
-<section class="page_container row">
+<section class="page_container user_page">
 
-<h3>My Mails</h3>
+<h1>Notifies</h1>
 
 {% include 'MaciMailerBundle:Mailer:_user_mails.html.twig' with {'list': list} %}
 
