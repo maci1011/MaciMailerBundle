@@ -3,20 +3,13 @@ services:
 
     maci.mailer:
         class: Maci\MailerBundle\Controller\MailerController
-        arguments: ["@doctrine.orm.entity_manager","@security.context"]
+        arguments: []
 
     maci_mailer.menu_builder:
         class: Maci\MailerBundle\Menu\MailerMenuBuilder
         arguments: ["@knp_menu.factory","@maci.translator"]
-
-    maci_mailer.menu.main:
-        class: Knp\Menu\MenuItem
-        factory_service: maci_mailer.menu_builder
-        factory_method: createLeftMenu
-        arguments: ["@request"]
-        scope: request
         tags:
-            - { name: knp_menu.menu, alias: mailer_left }
+            - { name: knp_menu.menu_builder, method: createLeftMenu, alias: mailer_left }
 
     maci_mailer.form.type.subscribe:
         class: Maci\MailerBundle\Form\Type\SubscribeType

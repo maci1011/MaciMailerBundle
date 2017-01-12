@@ -3,10 +3,6 @@
 namespace Maci\MailerBundle\Menu;
 
 use Knp\Menu\FactoryInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\SecurityContext;
-use Doctrine\Common\Persistence\ObjectManager;
-
 use Maci\TranslatorBundle\Controller\TranslatorController;
 
 class MailerMenuBuilder
@@ -24,7 +20,7 @@ class MailerMenuBuilder
 	    $this->locales = $tc->getLocales();
 	}
 
-    public function createLeftMenu(Request $request)
+    public function createLeftMenu(array $options)
 	{
 		$menu = $this->factory->createItem('root');
 
