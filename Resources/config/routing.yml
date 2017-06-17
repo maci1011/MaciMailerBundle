@@ -19,8 +19,10 @@ maci_mailer:
     path:     /admin/mailer
     defaults: { _controller: MaciMailerBundle:Default:index }
 
+
+
 maci_mailer_user_mails:
-    path:     /user/mails
+    path:     /notifications/
     defaults: { _controller: MaciMailerBundle:Default:userMails }
 
 maci_mailer_show:

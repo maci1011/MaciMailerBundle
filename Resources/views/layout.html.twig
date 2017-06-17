@@ -2,12 +2,11 @@
 {% extends "MaciAdminBundle::layout.html.twig" %}
 
 
+{% block menu_toggle %}MAILER{% endblock menu_toggle %}
+
 {% block top_menu %}
 <nav>
     <ul class="nav navbar-nav">
-        <li>
-            <a id="menu-toggle" href="#">MAILER</a>
-        </li>
         <li>
             <a href="{{ path('homepage') }}">Homepage</a>
         </li>
