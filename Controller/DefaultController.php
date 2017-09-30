@@ -60,11 +60,11 @@ class DefaultController extends Controller
 
         $mail = $this->getDoctrine()->getManager()
             ->getRepository('MaciMailerBundle:Mail')
-            ->findOneById( 4 );
+            ->findOneById( 1 );
 
         $cart = $this->getDoctrine()->getManager()
             ->getRepository('MaciOrderBundle:Order')
-            ->findOneById( 5 );
+            ->findOneById( 1 );
 
         return $this->render('MaciOrderBundle:Email:confirmation_email.html.twig', array('mail' => $mail, 'order' => $cart));
     }
