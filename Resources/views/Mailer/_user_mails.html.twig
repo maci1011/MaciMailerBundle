@@ -2,26 +2,50 @@
 {% if list|length %}
 
 
+<div class="list-default">
+<table class="table table-striped">
+
+<thead>
+<tr class="list-header">
+
+	<th class="list-header">
+		<span class="list-title">Subject</span>
+	</th>
+
+	<th class="list-header">
+		<span class="list-title">Date</span>
+	</th>
+
+	<th class="list-header">
+		<span class="list-title">Action</span>
+	</th>
+
+</tr>
+</thead>
+
+<tbody>
 
 {% for item in list %}
 
-<div class="row list-item">
+<tr class="list-item">
 
-	<div class="col-xs-8">
+	<td>
 		<span>{{ item.subject }}</span>
-	</div>
+	</td>
 
-	<div class="col-xs-2">
+	<td>
 		<span>{{ item.created|date('d/m/Y') }}</span>
-	</div>
+	</td>
 
-	<div class="col-xs-2">
-		<span><a class="btn btn-default" href="{{ path('maci_mailer_show', {'token': item.token}) }}" target="_blank">Show</a></span>
-	</div>
+	<td>
+		<a class="btn btn-default" href="{{ path('maci_mailer_show', {'token': item.token}) }}" target="_blank">Show</a>
+	</td>
 
-</div>
+</tr>
 
 {% endfor %}
 
+</tbody>
+</table>
 
 {% endif %}
