@@ -4,13 +4,35 @@
 
 {% block content %}
 
-<section class="page_container row">
+<div class="list-default">
+<table class="table table-striped">
 
-<h3>Templates</h3>
+<thead>
+<tr class="list-header">
+	<th class="list-header">
+		<span class="list-title">Template</span>
+	</th>
+	<th class="list-header">
+		<span class="list-title">Action</span>
+	</th>
+</tr>
+</thead>
 
-{% include 'MaciMailerBundle:Mailer:_user_mails.html.twig' with {'list': list} %}
+<tbody>
 
-</section>
+<tr class="list-item">
+	<td>
+		<span>Confirmation Email</span>
+	</td>
+	<td>
+		<a class="btn" href="{{ path('maci_mailer_templates_confirmation_email') }}" target="_blank">
+			<span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+			Show
+		</a>
+	</td>
+</tr>
+
+</tbody>
+</table>
 
 {% endblock %}
-

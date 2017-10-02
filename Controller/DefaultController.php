@@ -11,7 +11,8 @@ class DefaultController extends Controller
 {
     public function indexAction()
     {
-        return $this->render('MaciMailerBundle:Mailer:index.html.twig');
+        // return $this->render('MaciMailerBundle:Mailer:index.html.twig');
+        return $this->redirect($this->generateUrl('maci_mailer_notifications'));
     }
 
     public function notificationsAction()
@@ -56,8 +57,11 @@ class DefaultController extends Controller
         //     ->getRepository('MaciMailerBundle:Mail')
         //     ->findByType( 'template' );
 
-        // return $this->render('MaciMailerBundle:Mailer:templates.html.twig', array('list' => $list));
+        return $this->render('MaciMailerBundle:Mailer:templates.html.twig');
+    }
 
+    public function confirmationEmailTemplateAction()
+    {
         $mail = $this->getDoctrine()->getManager()
             ->getRepository('MaciMailerBundle:Mail')
             ->findOneById( 1 );

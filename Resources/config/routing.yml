@@ -11,6 +11,10 @@ maci_mailer_subscribers:
     path:     /admin/mailer/subscribers
     defaults: { _controller: MaciMailerBundle:Default:subscribers }
 
+maci_mailer_templates_confirmation_email:
+    path:     /admin/mailer/templates/confirmation-email
+    defaults: { _controller: MaciMailerBundle:Default:confirmationEmailTemplate }
+
 maci_mailer_templates:
     path:     /admin/mailer/templates
     defaults: { _controller: MaciMailerBundle:Default:templates }
