@@ -30,7 +30,7 @@ class MailerController extends Controller
             return false;
         }
 
-        $message = \Swift_Message::newInstance()
+        $message = (new \Swift_Message())
             ->setSubject($mail->getSubject())
             ->setFrom($mail->getFrom(), $mail->getHeader())
             ->setTo($to[0], $to[1])

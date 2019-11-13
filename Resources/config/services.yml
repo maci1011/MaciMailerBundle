@@ -1,15 +1,24 @@
 
 services:
 
+    # Mailer Service
+
+    Maci\MailerBundle\Controller\MailerController:
+        arguments: ["@doctrine.orm.entity_manager","@request_stack","%locales%"]
+
     maci.mailer:
-        class: Maci\MailerBundle\Controller\MailerController
-        arguments: []
+        alias: Maci\MailerBundle\Controller\MailerController
+        public: true
+
+    # Knp Menu
 
     maci_mailer.menu_builder:
         class: Maci\MailerBundle\Menu\MailerMenuBuilder
         arguments: ["@knp_menu.factory","@maci.translator"]
         tags:
             - { name: knp_menu.menu_builder, method: createLeftMenu, alias: mailer_left }
+
+    # Form
 
     maci_mailer.form.type.subscribe:
         class: Maci\MailerBundle\Form\Type\SubscribeType
