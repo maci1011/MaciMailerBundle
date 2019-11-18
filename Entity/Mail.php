@@ -20,11 +20,6 @@ class Mail
     /**
      * @var string
      */
-    private $template;
-
-    /**
-     * @var string
-     */
     private $token;
 
     /**
@@ -155,30 +150,6 @@ class Mail
     }
 
     /**
-     * Set template
-     *
-     * @param string $template
-     *
-     * @return Mail
-     */
-    public function setTemplate($template)
-    {
-        $this->template = $template;
-
-        return $this;
-    }
-
-    /**
-     * Get template
-     *
-     * @return string
-     */
-    public function getTemplate()
-    {
-        return $this->template;
-    }
-
-    /**
      * Set token
      *
      * @param string $token
@@ -239,7 +210,7 @@ class Mail
         return $this;
     }
 
-    public function addTo($to, $int = null)
+    public function addTo($to)
     {
         if (!is_array($this->_to)) {
             $this->_to = array();
@@ -247,12 +218,6 @@ class Mail
 
         if (is_array($to)) {
             $this->_to = array_merge($this->_to, $to);
-        } else {
-            if (!is_null($int)) {
-                $this->_to[$to] = $int;
-            } else {
-                $this->_to[$to] = null;
-            }
         }
 
         return $this;
@@ -266,6 +231,11 @@ class Mail
     public function getTo()
     {
         return $this->_to;
+    }
+
+    public function get_to()
+    {
+        return $this->getTo();
     }
 
     public function getToMails()
@@ -365,6 +335,11 @@ class Mail
         return $this->_index;
     }
 
+    public function get_index()
+    {
+        return $this->getIndex();
+    }
+
     /**
      * Set from
      *
@@ -391,6 +366,11 @@ class Mail
     public function getFrom()
     {
         return $this->_from;
+    }
+
+    public function get_from()
+    {
+        return $this->getFrom();
     }
 
     /**
@@ -632,18 +612,18 @@ class Mail
     }
 
     /**
-     * __toString()
-     */
-    public function __toString()
-    {
-        return $this->getName();
-    }
-
-    /**
      * isFinish()
      */
     public function isFinish()
     {
         return !( $this->_index < $this->getToLength() );
+    }
+
+    /**
+     * _toString()
+     */
+    public function __toString()
+    {
+        return 'Mail_'.$this->getToken();
     }
 }

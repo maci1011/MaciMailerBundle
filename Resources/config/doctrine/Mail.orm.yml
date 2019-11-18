@@ -12,10 +12,6 @@ Maci\MailerBundle\Entity\Mail:
         name:
             type: string
             length: 127
-        template:
-            type: string
-            length: 63
-            nullable: true
         token:
             type: string
             length: 127
