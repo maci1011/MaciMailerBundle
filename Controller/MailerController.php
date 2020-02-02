@@ -2,11 +2,11 @@
 
 namespace Maci\MailerBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Maci\MailerBundle\Entity\Mail;
 use Maci\MailerBundle\Entity\Subscriber;
 
-class MailerController extends Controller
+class MailerController extends AbstractController
 {
 	private $user;
 

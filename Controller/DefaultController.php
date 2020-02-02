@@ -2,12 +2,12 @@
 
 namespace Maci\MailerBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 
 use Maci\MailerBundle\Entity\Subscriber;
 
-class DefaultController extends Controller
+class DefaultController extends AbstractController
 {
     public function indexAction()
     {
