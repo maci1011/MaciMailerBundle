@@ -20,10 +20,6 @@ Maci\MailerBundle\Entity\Subscriber:
         locale:
             type: string
             length: 10
-        created:
-            type: datetime
-        updated:
-            type: datetime
         removed:
             type: boolean
     manyToOne:
@@ -32,8 +28,5 @@ Maci\MailerBundle\Entity\Subscriber:
             joinColumn:
                 name: user_id
                 referencedColumnName: id
-    lifecycleCallbacks:
-        prePersist: [ setUpdatedValue, setCreatedValue ]
-        preUpdate: [ setUpdatedValue ]
 
 

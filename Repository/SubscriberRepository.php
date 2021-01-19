@@ -14,7 +14,7 @@ class SubscriberRepository extends \Doctrine\ORM\EntityRepository
     {
         $q = $this->getEntityManager()
             ->createQuery(
-                'SELECT s FROM MaciMailerBundle:Subscriber s WHERE s.removed = false ORDER BY s.created DESC'
+                'SELECT s FROM MaciMailerBundle:Subscriber s WHERE s.removed = false ORDER BY s.id ASC'
             )
         ;
 

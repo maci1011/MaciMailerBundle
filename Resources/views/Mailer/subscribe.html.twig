@@ -1,0 +1,18 @@
+
+{% extends "@MaciPage/Layout/layout.html.twig" %}
+
+
+{% block title %}
+
+{{ 'mailer.subscribe' | matra('Subscribe') }}
+
+{% endblock %}
+
+
+{% block content %}
+
+{% include 'MaciMailerBundle:Form:_subscribe.html.twig' %}
+
+{% endblock %}
+
+

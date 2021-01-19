@@ -50,10 +50,11 @@ Maci\MailerBundle\Entity\Mail:
             length: 10
         public:
             type: boolean
-        created:
+        sended:
             type: datetime
-        updated:
-            type: datetime
+            nullable: true
+            # options:
+            #     default: CURRENT_TIMESTAMP
         removed:
             type: boolean
     manyToOne:
@@ -62,6 +63,3 @@ Maci\MailerBundle\Entity\Mail:
             joinColumn:
                 name: user_id
                 referencedColumnName: id
-    lifecycleCallbacks:
-        prePersist: [ setUpdatedValue, setCreatedValue ]
-        preUpdate: [ setUpdatedValue ]

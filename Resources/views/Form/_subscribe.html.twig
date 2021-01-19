@@ -1,31 +1,46 @@
 
-<form action="{{ path('maci_mailer_subscribe') }}" method="post" {{ form_enctype(form) }}>
+{{ form_start(form) }}
 
 	<div class="form-group">
     	{{ form_errors(form) }}
 	</div>
 
 	<div class="form-group">
-		<label for="form_name">{{ 'form.name'|matra('Name') }}*:</label>
+		<label for="form_name">{{ 'form.name'|matra('Name') }}</label>
 		<br/>
-		<input id="form_name" class="form-control" type="text" name="subscribe[name]" placeholder="{{ 'form.name'|matra('Name') }}*" />
+		<input id="form_name" class="form-control" type="text" name="subscribe[name]" placeholder="{{ 'form.name'|matra('Name') }}" />
 		<br/>
 		{{ form_errors(form.name) }}
 	</div>
 
 	<div class="form-group">
-		<label class="required" for="form_mail">{{ 'form.email'|matra('Email') }}:</label>
+		<label class="required" for="form_mail">{{ 'form.email'|matra('Email') }}</label>
 		<br/>
 		<input id="form_mail" class="form-control" type="text" required="required" name="subscribe[mail]" placeholder="{{ 'form.email'|matra('Email') }}" />
 		<br/>
 		{{ form_errors(form.mail) }}
 	</div>
+	
+	{% include "@MaciPage/Form/_optional_fields.html.twig" %}
+
+	{% if form.recaptcha is defined %}
+	<div class="form-group">
+		{{ form_row(form.recaptcha) }}
+	</div>
+	{% endif %}
+
+	<div class="checkbox privacy">
+		<input id="form_privacy" type="checkbox" required="required" name="subscribe[privacy]" />
+		<label class="required" for="form_privacy">{{ 'read_privacy'|matla('I have read and agree to the') }} <a href="{{ path('maci_page', {'path': 'privacy'}) }}" target="_blank">{{ 'privacy_policy'|matla('Privacy Policy') }}</a></label>
+		<div class="form-errors">{{ form_errors(form.privacy) }}</div>
+	</div>
 
 	<div class="form-group">
     	{{ form_row(form._token) }}
-		<button id="form_send" class="btn btn-primary" name="subscribe[send]" type="submit">{{ 'form.send'|matra('Send') }}</button>
+		<input type="hidden" name="subscribe[locale]" value="{{ app.request.locale }}">
+		<button id="form_send" class="btn btn-primary" name="subscribe[send]" type="submit">{{ 'form.subscribe'|matra('Subscribe') }}!</button>
 	</div>
 
-</form>
+{{ form_end(form, {'render_rest': false}) }}
 
 

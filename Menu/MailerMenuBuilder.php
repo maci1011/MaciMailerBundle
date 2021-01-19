@@ -26,13 +26,7 @@ class MailerMenuBuilder
 
 		$menu->setChildrenAttribute('class', 'nav');
 
-		$menu->addChild($this->translator->getText('menu.admin.mailer.notifications', 'Notifications'), array('route' => 'maci_mailer_notifications'));
-
 		$menu->addChild($this->translator->getText('menu.admin.mailer.templates', 'Templates'), array('route' => 'maci_mailer_templates'));
-
-		$menu->addChild($this->translator->getText('menu.admin.mailer.subscribers', 'Subscribers List'), array('route' => 'maci_mailer_subscribers'));
-
-		$menu->addChild($this->translator->getText('menu.admin.mailer.add_subscribers', 'Add Subscribers'), array('route' => 'maci_mailer_add_subscribers'));
 
 		return $menu;
 	}

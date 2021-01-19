@@ -3,4 +3,16 @@
 
 {{ mail.content|raw }}
 
+{% else %}
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>No Content</title>
+</head>
+<body>
+	<h1>No Content.</h1>
+</body>
+</html>
+
 {% endif %}

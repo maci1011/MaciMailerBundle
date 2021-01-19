@@ -4,101 +4,103 @@ namespace Maci\MailerBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Intl\Locales;
 
 use Maci\MailerBundle\Entity\Subscriber;
+use Maci\MailerBundle\Form\Type\SubscribeType;
+
 
 class DefaultController extends AbstractController
 {
-    public function indexAction()
-    {
-        // return $this->render('MaciMailerBundle:Mailer:index.html.twig');
-        return $this->redirect($this->generateUrl('maci_mailer_notifications'));
-    }
+	public function indexAction()
+	{
+		// return $this->render('@MaciMailer/Mailer/index.html.twig');
+		return $this->redirect($this->generateUrl('maci_mailer_notifications'));
+	}
 
-    public function notificationsAction()
-    {
-        $list = $this->getDoctrine()->getManager()
-            ->getRepository('MaciMailerBundle:Mail')
-            ->findByType( 'notify' );
+	public function userMailsAction()
+	{
+		$list = $this->getDoctrine()->getManager()
+			->getRepository('MaciMailerBundle:Mail')
+			->getUserMails( $this->getUser() );
 
-        return $this->render('MaciMailerBundle:Mailer:notifications.html.twig', array('list' => $list));
-    }
+		return $this->render('@MaciMailer/Mailer/user_mails.html.twig', array('list' => $list));
+	}
 
-    public function subscribersAction()
-    {
-        $list = $this->getDoctrine()->getManager()
-            ->getRepository('MaciMailerBundle:Subscriber')
-            ->getList();
+	public function showAction($token)
+	{
+		$mail = $this->getDoctrine()->getManager()
+			->getRepository('MaciMailerBundle:Mail')
+			->findOneByToken( $token );
 
-        return $this->render('MaciMailerBundle:Mailer:subscribers.html.twig', array('list' => $list));
-    }
+		return $this->render('@MaciMailer/Mailer/show.html.twig', array('mail' => $mail));
+	}
 
-    public function userMailsAction()
-    {
-        $list = $this->getDoctrine()->getManager()
-            ->getRepository('MaciMailerBundle:Mail')
-            ->getUserMails( $this->getUser() );
+	public function subscribeAction(Request $request)
+	{
+		$subscriber = new Subscriber;
 
-        return $this->render('MaciMailerBundle:Mailer:user_mails.html.twig', array('list' => $list));
-    }
+		$form = $this->getSubscribeForm($subscriber);
 
-    public function showAction($token)
-    {
-        $mail = $this->getDoctrine()->getManager()
-            ->getRepository('MaciMailerBundle:Mail')
-            ->findOneByToken( $token );
+		$form->handleRequest($request);
 
-        return $this->render('MaciMailerBundle:Mailer:show.html.twig', array('mail' => $mail));
-    }
+		if ($form->isSubmitted() && $form->isValid()) {
 
-    public function templatesAction()
-    {
-        // $list = $this->getDoctrine()->getManager()
-        //     ->getRepository('MaciMailerBundle:Mail')
-        //     ->findByType( 'template' );
+			$subscriber->setLocale($request->getLocale());
 
-        return $this->render('MaciMailerBundle:Mailer:templates.html.twig');
-    }
+			$em = $this->getDoctrine()->getEntityManager();
+			$em->persist($subscriber);
+			$em->flush();
 
-    public function confirmationEmailTemplateAction()
-    {
-        $mail = $this->getDoctrine()->getManager()
-            ->getRepository('MaciMailerBundle:Mail')
-            ->findOneById( 1 );
+			return $this->redirect($this->generateUrl('maci_page', array('path' => 'subscription_complete')));
+		}
 
-        $cart = $this->getDoctrine()->getManager()
-            ->getRepository('MaciOrderBundle:Order')
-            ->findOneById( 1 );
+		return $this->render('@MaciMailer/Mailer/subscribe.html.twig', array(
+			'form' => $form->createView()
+		));
+	}
 
-        return $this->render('MaciOrderBundle:Email:confirmation_email.html.twig', array('mail' => $mail, 'order' => $cart));
-    }
+	public function getSubscribeForm(&$subscriber)
+	{
+		if (!$subscriber) {
+			$subscriber = new Subscriber;
+		}
+		
+		$choices = [];
+		$choices[ucfirst(Locales::getName('it'))] = 'it';
+		$choices[ucfirst(Locales::getName('en'))] = 'en';
 
-    public function addAction($token)
-    {
-        return $this->render('MaciMailerBundle:Mailer:add.html.twig');
-    }
+		return $this->createForm(SubscribeType::class, $subscriber, array(
+			'action' => $this->generateUrl('maci_mailer_subscribe'),
+			'method' => 'POST',
+			'env' => $this->get('kernel')->getEnvironment(),
+			'locales' => $choices
+		));
+	}
 
-    public function subscribeFormAction(Request $request)
-    {
-        $subscriber = new Subscriber;
+	public function templatesAction()
+	{
+		// $list = $this->getDoctrine()->getManager()
+		//     ->getRepository('MaciMailerBundle:Mail')
+		//     ->findByType( 'template' );
 
-        $form = $this->createForm('subscribe', $subscriber);
+		return $this->render('@MaciMailer/Mailer/templates.html.twig');
+	}
 
-        $form->handleRequest($request);
+	public function confirmationEmailTemplateAction()
+	{
+		$orders = $this->getDoctrine()->getManager()
+			->getRepository('MaciOrderBundle:Order')
+			->findBy(['status' => ['confirm', 'complete']], ['id' => 'DESC'], ['limit' => 100]);
 
-        if ($form->isValid()) {
+		return $this->render('@MaciOrder/Email/confirmation_email.html.twig', [
+			'order' => $orders[rand(0,count($orders) - 1)]
+		]);
+	}
 
-            $subscriber->setLocale( $request->getLocale() );
-
-            $em = $this->getDoctrine()->getEntityManager();
-            $em->persist($subscriber);
-            $em->flush();
-
-            return $this->redirect($this->generateUrl('maci_page', array('path' => 'subscription_completed')));
-        }
-
-        return $this->render('MaciMailerBundle:Form:_subscribe.html.twig', array(
-            'form' => $form->createView()
-        ));
-    }
+	// public function subscribeAction()
+	// {
+	// 	$form = $this->getSubscribeForm();
+	// 	return $this->render('@MaciMailer/Mailer/subscribe.html.twig', array('form' => $form));
+	// }
 }

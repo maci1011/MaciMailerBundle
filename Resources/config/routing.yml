@@ -1,26 +1,14 @@
 
-maci_mailer_notifications:
-    path:     /admin/mailer/notifications
-    defaults: { _controller: MaciMailerBundle:Default:notifications }
-
-maci_mailer_add_subscribers:
-    path:     /admin/mailer/subscribers/add
-    defaults: { _controller: MaciMailerBundle:Default:add }
-
-maci_mailer_subscribers:
-    path:     /admin/mailer/subscribers
-    defaults: { _controller: MaciMailerBundle:Default:subscribers }
-
 maci_mailer_templates_confirmation_email:
-    path:     /admin/mailer/templates/confirmation-email
+    path:     /mailer/templates/confirmation-email
     defaults: { _controller: MaciMailerBundle:Default:confirmationEmailTemplate }
 
 maci_mailer_templates:
-    path:     /admin/mailer/templates
-    defaults: { _controller: MaciMailerBundle:Default:templates }
+    path:     /mailer/templates
+    defaults: { _controller: MaciMailerBundle:Default:templates, section: mails }
 
 maci_mailer:
-    path:     /admin/mailer
+    path:     /mailer
     defaults: { _controller: MaciMailerBundle:Default:index }
 
 
@@ -32,7 +20,12 @@ maci_mailer_user_mails:
 maci_mailer_show:
     path:     /mailer/show/{token}
     defaults: { _controller: MaciMailerBundle:Default:show }
+    requirements:
+        token: .+
 
 maci_mailer_subscribe:
-    path:     /mailer/subscribe
-    defaults: { _controller: MaciMailerBundle:Default:subscribeForm }
+    path:     /{_locale}/newsletter/subscribe
+    defaults: { _controller: MaciMailerBundle:Default:subscribe }
+    requirements:
+        _locale: "%r_locales%"
+
