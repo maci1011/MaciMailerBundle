@@ -1,0 +1,28 @@
+
+Maci\MailerBundle\Entity\Slide:
+    type:  entity
+    table: maci_mailer_slide
+    # repositoryClass: Maci\MailerBundle\Repository\SlideRepository
+    id:
+        id:
+            type: integer
+            generator:
+                strategy: AUTO
+    fields:
+        title:
+            type: string
+            length: 127
+        content:
+            type: text
+            nullable: true
+        template:
+            type: string
+            length: 127
+        position:
+            type: smallint
+    manyToOne:
+        mail:
+            targetEntity: Maci\MailerBundle\Entity\Mail
+            joinColumn:
+                name: mail_id
+                referencedColumnName: id

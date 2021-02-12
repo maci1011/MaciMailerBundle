@@ -7,229 +7,537 @@ namespace Maci\MailerBundle\Entity;
  */
 class Subscriber
 {
-    /**
-     * @var integer
-     */
-    private $id;
+	/**
+	 * @var integer
+	 */
+	private $id;
 
-    /**
-     * @var string
-     */
-    private $name;
+	/**
+	 * @var string
+	 */
+	private $name;
 
-    /**
-     * @var string
-     */
-    private $mail;
+	/**
+	 * @var string
+	 */
+	private $surname;
 
-    /**
-     * @var string
-     */
-    private $locale;
+	/**
+	 * @var \Date
+	 */
+	private $birthdate;
 
-    /**
-     * @var \DateTime
-     */
-    private $created;
+	/**
+	 * @var boolean
+	 */
+	private $sex;
 
-    /**
-     * @var \DateTime
-     */
-    private $updated;
+	/**
+	 * @var string
+	 */
+	private $mail;
 
-    /**
-     * @var boolean
-     */
-    private $removed;
+	/**
+	 * @var string
+	 */
+	private $mobile;
 
-    /**
-     * @var \Maci\UserBundle\Entity\User
-     */
-    private $user;
+	/**
+	 * @var string
+	 */
+	private $locale;
+
+	/**
+	 * @var string
+	 */
+	private $notes;
+
+	/**
+	 * @var string
+	 */
+	private $token;
+
+	/**
+	 * @var boolean
+	 */
+	private $newsletter;
+
+	/**
+	 * @var boolean
+	 */
+	private $sms;
+
+	/**
+	 * @var boolean
+	 */
+	private $phone;
+
+	/**
+	 * @var boolean
+	 */
+	private $removed;
+
+	/**
+	 * @var \DateTime
+	 */
+	private $created;
+
+	/**
+	 * @var \DateTime
+	 */
+	private $updated;
+
+	/**
+	 * @var \Maci\UserBundle\Entity\User
+	 */
+	private $user;
+
+	/**
+	 * @var \Maci\UserBundle\Entity\Address
+	 */
+	private $address;
 
 
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->removed = false;
-    }
+	/**
+	 * Constructor
+	 */
+	public function __construct()
+	{
+		$this->token = md5(uniqid());
+		$this->sex = false;
+		$this->removed = false;
+	}
 
 
-    /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
+	/**
+	 * Get id
+	 *
+	 * @return integer
+	 */
+	public function getId()
+	{
+		return $this->id;
+	}
 
-    /**
-     * Set name
-     *
-     * @param string $name
-     *
-     * @return Subscriber
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
+	/**
+	 * Set name
+	 *
+	 * @param string $name
+	 *
+	 * @return Subscriber
+	 */
+	public function setName($name)
+	{
+		$this->name = $name;
 
-        return $this;
-    }
+		return $this;
+	}
 
-    /**
-     * Get name
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
+	/**
+	 * Get name
+	 *
+	 * @return string
+	 */
+	public function getName()
+	{
+		return $this->name;
+	}
 
-    /**
-     * Set mail
-     *
-     * @param string $mail
-     *
-     * @return Subscriber
-     */
-    public function setMail($mail)
-    {
-        $this->mail = $mail;
+	/**
+	 * Set surname
+	 *
+	 * @param string $surname
+	 * @return Subscriber
+	 */
+	public function setSurname($surname)
+	{
+		$this->surname = $surname;
 
-        return $this;
-    }
+		return $this;
+	}
 
-    /**
-     * Get mail
-     *
-     * @return string
-     */
-    public function getMail()
-    {
-        return $this->mail;
-    }
+	/**
+	 * Get surname
+	 *
+	 * @return string 
+	 */
+	public function getSurname()
+	{
+		return $this->surname;
+	}
 
-    public function setLocale($locale)
-    {
-        $this->locale = $locale;
+	/**
+	 * Set birthdate
+	 *
+	 * @param string $birthdate
+	 * @return Subscriber
+	 */
+	public function setBirthdate($birthdate)
+	{
+		$this->birthdate = $birthdate;
 
-        return $this;
-    }
+		return $this;
+	}
 
-    public function getLocale()
-    {
-        return $this->locale;
-    }
+	/**
+	 * Get birthdate
+	 *
+	 * @return string 
+	 */
+	public function getBirthdate()
+	{
+		return $this->birthdate;
+	}
 
-    /**
-     * Set created
-     *
-     * @param \DateTime $created
-     *
-     * @return Subscriber
-     */
-    public function setCreated($created)
-    {
-        $this->created = $created;
+	/**
+	 * Set sex
+	 *
+	 * @param string $sex
+	 * @return Subscriber
+	 */
+	public function setSex($sex)
+	{
+		$this->sex = $sex;
 
-        return $this;
-    }
+		return $this;
+	}
 
-    /**
-     * Get created
-     *
-     * @return \DateTime
-     */
-    public function getCreated()
-    {
-        return $this->created;
-    }
+	/**
+	 * Get sex
+	 *
+	 * @return string 
+	 */
+	public function getSex()
+	{
+		return $this->sex;
+	}
 
-    /**
-     * Set updated
-     *
-     * @param \DateTime $updated
-     *
-     * @return Subscriber
-     */
-    public function setUpdated($updated)
-    {
-        $this->updated = $updated;
+	public function getSexLabel()
+	{
+		return $this->sex ? 'M' : 'F';
+	}
 
-        return $this;
-    }
+	/**
+	 * Set mail
+	 *
+	 * @param string $mail
+	 *
+	 * @return Subscriber
+	 */
+	public function setMail($mail)
+	{
+		$this->mail = $mail;
 
-    /**
-     * Get updated
-     *
-     * @return \DateTime
-     */
-    public function getUpdated()
-    {
-        return $this->updated;
-    }
+		return $this;
+	}
 
-    /**
-     * Set removed
-     *
-     * @param boolean $removed
-     *
-     * @return Subscriber
-     */
-    public function setRemoved($removed)
-    {
-        $this->removed = $removed;
+	/**
+	 * Get mail
+	 *
+	 * @return string
+	 */
+	public function getMail()
+	{
+		return $this->mail;
+	}
 
-        return $this;
-    }
+	/**
+	 * Set mobile
+	 *
+	 * @param string $mobile
+	 * @return Subscriber
+	 */
+	public function setMobile($mobile)
+	{
+		$this->mobile = $mobile;
 
-    /**
-     * Get removed
-     *
-     * @return boolean
-     */
-    public function getRemoved()
-    {
-        return $this->removed;
-    }
+		return $this;
+	}
 
-    /**
-     * Set user
-     *
-     * @param \Maci\UserBundle\Entity\User $user
-     *
-     * @return Subscriber
-     */
-    public function setUser(\Maci\UserBundle\Entity\User $user = null)
-    {
-        $this->user = $user;
+	/**
+	 * Get mobile
+	 *
+	 * @return string 
+	 */
+	public function getMobile()
+	{
+		return $this->mobile;
+	}
 
-        return $this;
-    }
+	/**
+	 * Set locale
+	 *
+	 * @param string $locale
+	 * @return Subscriber
+	 */
+	public function setLocale($locale)
+	{
+		$this->locale = $locale;
 
-    /**
-     * Get user
-     *
-     * @return \Maci\UserBundle\Entity\User
-     */
-    public function getUser()
-    {
-        return $this->user;
-    }
+		return $this;
+	}
 
-    public function setUpdatedValue()
-    {
-        $this->updated = new \DateTime();
-    }
+	/**
+	 * Get locale
+	 *
+	 * @return string 
+	 */
+	public function getLocale()
+	{
+		return $this->locale;
+	}
 
-    public function setCreatedValue()
-    {
-        $this->created = new \DateTime();
-    }
+	/**
+	 * Set notes
+	 *
+	 * @param string $notes
+	 * @return Subscriber
+	 */
+	public function setNotes($notes)
+	{
+		$this->notes = $notes;
+
+		return $this;
+	}
+
+	/**
+	 * Get notes
+	 *
+	 * @return string 
+	 */
+	public function getNotes()
+	{
+		return $this->notes;
+	}
+
+	/**
+	 * Set token
+	 *
+	 * @param string $token
+	 * @return Subscriber
+	 */
+	public function setToken($token)
+	{
+		$this->token = $token;
+
+		return $this;
+	}
+
+	/**
+	 * Get token
+	 *
+	 * @return string 
+	 */
+	public function getToken()
+	{
+		return $this->token;
+	}
+
+	/**
+	 * Set newsletter
+	 *
+	 * @param string $newsletter
+	 * @return Subscriber
+	 */
+	public function setNewsletter($newsletter)
+	{
+		$this->newsletter = $newsletter;
+
+		return $this;
+	}
+
+	/**
+	 * Get newsletter
+	 *
+	 * @return string 
+	 */
+	public function getNewsletter()
+	{
+		return $this->newsletter;
+	}
+
+	/**
+	 * Set sms
+	 *
+	 * @param string $sms
+	 * @return Subscriber
+	 */
+	public function setSms($sms)
+	{
+		$this->sms = $sms;
+
+		return $this;
+	}
+
+	/**
+	 * Get sms
+	 *
+	 * @return string 
+	 */
+	public function getSms()
+	{
+		return $this->sms;
+	}
+
+	/**
+	 * Set phone
+	 *
+	 * @param string $phone
+	 * @return Subscriber
+	 */
+	public function setPhone($phone)
+	{
+		$this->phone = $phone;
+
+		return $this;
+	}
+
+	/**
+	 * Get phone
+	 *
+	 * @return string 
+	 */
+	public function getPhone()
+	{
+		return $this->phone;
+	}
+
+	/**
+	 * Set removed
+	 *
+	 * @param boolean $removed
+	 *
+	 * @return Subscriber
+	 */
+	public function setRemoved($removed)
+	{
+		$this->removed = $removed;
+
+		return $this;
+	}
+
+	/**
+	 * Get removed
+	 *
+	 * @return boolean
+	 */
+	public function getRemoved()
+	{
+		return $this->removed;
+	}
+
+	/**
+	 * Set created
+	 *
+	 * @param \DateTime $created
+	 *
+	 * @return Subscriber
+	 */
+	public function setCreated($created)
+	{
+		$this->created = $created;
+
+		return $this;
+	}
+
+	/**
+	 * Get created
+	 *
+	 * @return \DateTime
+	 */
+	public function getCreated()
+	{
+		return $this->created;
+	}
+
+	/**
+	 * Set updated
+	 *
+	 * @param \DateTime $updated
+	 *
+	 * @return Subscriber
+	 */
+	public function setUpdated($updated)
+	{
+		$this->updated = $updated;
+
+		return $this;
+	}
+
+	/**
+	 * Get updated
+	 *
+	 * @return \DateTime
+	 */
+	public function getUpdated()
+	{
+		return $this->updated;
+	}
+
+	/**
+	 * Set user
+	 *
+	 * @param \Maci\UserBundle\Entity\User $user
+	 *
+	 * @return Subscriber
+	 */
+	public function setUser(\Maci\UserBundle\Entity\User $user = null)
+	{
+		$this->user = $user;
+
+		return $this;
+	}
+
+	/**
+	 * Get user
+	 *
+	 * @return \Maci\UserBundle\Entity\User
+	 */
+	public function getUser()
+	{
+		return $this->user;
+	}
+
+	/**
+	 * Set address
+	 *
+	 * @param \Maci\UserBundle\Entity\Address $address
+	 *
+	 * @return Subscriber
+	 */
+	public function setAddress(\Maci\UserBundle\Entity\Address $address = null)
+	{
+		$this->address = $address;
+
+		return $this;
+	}
+
+	/**
+	 * Get address
+	 *
+	 * @return \Maci\UserBundle\Entity\Address
+	 */
+	public function getAddress()
+	{
+		return $this->address;
+	}
+
+
+	public function setUpdatedValue()
+	{
+		$this->updated = new \DateTime();
+	}
+
+	public function setCreatedValue()
+	{
+		$this->created = new \DateTime();
+	}
+
+	/**
+	 * __toString()
+	 */
+	public function __toString()
+	{
+		return 'Subscriber#'.$this->getId();
+	}
 }

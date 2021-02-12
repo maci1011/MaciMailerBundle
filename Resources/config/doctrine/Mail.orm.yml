@@ -63,3 +63,8 @@ Maci\MailerBundle\Entity\Mail:
             joinColumn:
                 name: user_id
                 referencedColumnName: id
+    oneToMany:
+        slides:
+            targetEntity: Maci\MailerBundle\Entity\Slide
+            mappedBy: mail
+            orderBy: { 'position': ASC }

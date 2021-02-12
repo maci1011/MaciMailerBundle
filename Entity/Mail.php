@@ -92,6 +92,11 @@ class Mail
 	 */
 	private $user;
 
+	/**
+	 * @var \Doctrine\Common\Collections\Collection
+	 */
+	private $slides;
+
 
 	/**
 	 * Constructor
@@ -107,6 +112,7 @@ class Mail
 		$this->_index = 0;
 		$this->public = false;
 		$this->removed = false;
+		$this->slides = new \Doctrine\Common\Collections\ArrayCollection();
 	}
 
 
@@ -575,6 +581,39 @@ class Mail
 	public function getUser()
 	{
 		return $this->user;
+	}
+
+	/**
+	 * Add slide
+	 *
+	 * @param \Maci\MailerBundle\Entity\Slide $slide
+	 * @return Mail
+	 */
+	public function addSlide(\Maci\MailerBundle\Entity\Slide $slide)
+	{
+		$this->slides[] = $slide;
+
+		return $this;
+	}
+
+	/**
+	 * Remove slide
+	 *
+	 * @param \Maci\MailerBundle\Entity\Slide $slide
+	 */
+	public function removeSlide(\Maci\MailerBundle\Entity\Slide $slide)
+	{
+		$this->slides->removeElement($slide);
+	}
+
+	/**
+	 * Get slides
+	 *
+	 * @return \Doctrine\Common\Collections\Collection 
+	 */
+	public function getSlides()
+	{
+		return $this->slides;
 	}
 
 	/**

@@ -21,7 +21,7 @@ use Maci\UserBundle\Form\Type\AddressType;
 /**
  * Subscribe
  */
-class SubscribeType extends AbstractType
+class SubscriberType extends AbstractType
 {
 	public function configureOptions(OptionsResolver $resolver)
 	{
@@ -35,42 +35,54 @@ class SubscribeType extends AbstractType
 
 	public function buildForm(FormBuilderInterface $builder, array $options)
 	{
+		$years = [];
+		for ($i=0; $i < 100; $i++) { 
+			$years[$i] = 2021 - $i;
+		}
+
+		// $locales = [];
+		// if(is_array($options['locales'])) {
+		// 	$locales = $options['locales'];
+		// } else {
+		// 	$locales = ...
+		// }
+
 		$builder
 			->add('name')
+			->add('surname', null, ['required' => false])
+			->add('birthdate', null, ['required' => false, 'years' => $years])
+			->add('sex', ChoiceType::class, array(
+				'choices' => ['F' => 0, 'M' => 1]
+			))
 			->add('mail', EmailType::class, array(
 				'constraints' => new Email(array(
 					'message' => 'Insert your Email'
 				))
 			))
+			->add('mobile', null, ['required' => false])
 		;
 
 		if(is_array($options['locales'])) {
 			$builder->add('locale', ChoiceType::class, array(
-				'label_attr'  => array('class'=> 'sr-only'),
 				'choices' => $options['locales']
 			));
 		} else {
 			$builder->add('locale', LocaleType::class);
 		}
 
-		if($options['env'] === "prod") {
-			$builder->add('recaptcha', EWZRecaptchaType::class, array(
-				'label_attr'  => array('class'=> 'sr-only'),
-				'mapped'      => false,
-				'constraints' => array(
-					new RecaptchaTrue()
-				)
-			));
-		}
+		$builder
+			->add('notes', null, ['required' => false])
+			->add('newsletter')
+			->add('sms')
+			->add('phone')
+			->add('address', AddressType::class, [
+				'required' => false,
+				'embedded' => true
+			])
+		;
 
 		$builder
-			->add('privacy', CheckboxType::class, array(
-				'mapped' => false,
-				'constraints' => new IsTrue(array(
-					'message' => 'Please accept the Terms and Conditions'
-				))
-			))
-			->add('subscribe', SubmitType::class)
+			->add('save', SubmitType::class)
 		;
 	}
 
