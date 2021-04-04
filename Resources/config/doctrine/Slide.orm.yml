@@ -11,18 +11,35 @@ Maci\MailerBundle\Entity\Slide:
     fields:
         title:
             type: string
-            length: 127
+            length: 63
+            nullable: true
         content:
             type: text
             nullable: true
-        template:
+        type:
             type: string
-            length: 127
+            length: 15
+            nullable: true
+        link:
+            type: string
+            length: 255
+            nullable: true
+        video:
+            type: string
+            length: 255
+            nullable: true
         position:
             type: smallint
     manyToOne:
+        media:
+            targetEntity: Maci\PageBundle\Entity\Media\Media
         mail:
             targetEntity: Maci\MailerBundle\Entity\Mail
-            joinColumn:
-                name: mail_id
-                referencedColumnName: id
+            inversedBy: slides
+        parent:
+            targetEntity: Maci\MailerBundle\Entity\Slide
+            inversedBy: children
+    oneToMany:
+        children:
+            targetEntity: Maci\MailerBundle\Entity\Slide
+            mappedBy: parent

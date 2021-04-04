@@ -25,7 +25,17 @@ class Slide
 	/**
 	 * @var string
 	 */
-	private $template;
+	private $type;
+
+	/**
+	 * @var string
+	 */
+	private $link;
+
+	/**
+	 * @var string
+	 */
+	private $video;
 
 	/**
 	 * @var int
@@ -33,9 +43,24 @@ class Slide
 	private $position;
 
 	/**
+	 * @var \Maci\PageBundle\Entity\Media\Media
+	 */
+	private $media;
+
+	/**
 	 * @var \Maci\MailerBundle\Entity\Mail
 	 */
 	private $mail;
+
+	/**
+	 * @var \Maci\MailerBundle\Entity\Slide
+	 */
+	private $parent;
+
+	/**
+	 * @var \Doctrine\Common\Collections\Collection
+	 */
+	private $children;
 
 
 	/**
@@ -43,9 +68,9 @@ class Slide
 	 */
 	public function __construct()
 	{
-		$this->title = 'A New Slide';
-		$this->template = '@MaciMailer/Slide/default.html.twig';
+		$this->type = 'default';
 		$this->position = 0;
+		$this->children = new \Doctrine\Common\Collections\ArrayCollection();
 	}
 
 
@@ -108,49 +133,73 @@ class Slide
 	}
 
 	/**
-	 * Set template
+	 * Set type
 	 *
-	 * @param string $template
+	 * @param string $type
 	 *
 	 * @return Slide
 	 */
-	public function setTemplate($template)
+	public function setType($type)
 	{
-		$this->template = $template;
+		$this->type = $type;
 
 		return $this;
 	}
 
 	/**
-	 * Get template
+	 * Get type
 	 *
 	 * @return string
 	 */
-	public function getTemplate()
+	public function getType()
 	{
-		return $this->template;
+		return $this->type;
 	}
 
 	/**
-	 * Get Template Array
+	 * Get Type Array
 	 */
-	public function getTemplateArray()
+	static public function getTypeArray()
 	{
-		return array(
+		return [
 			'Default' => '@MaciMailer/Slide/default.html.twig',
 			'Foo' => '@MaciMailer/Slide/foo.html.twig'
-		);
+		];
 	}
 
-	public function getTemplateLabel()
+	public function getTypeLabel()
 	{
-		$array = $this->getTemplateArray();
-		$key = array_search($this->template, $array);
+		$array = $this->getTypeArray();
+		$key = array_search($this->type, $array);
 		if ($key) {
 			return $key;
 		}
-		$str = str_replace('_', ' ', $this->template);
+		$str = str_replace('_', ' ', $this->type);
 		return ucwords($str);
+	}
+
+	public function setVideo($video)
+	{
+		$this->video = $video;
+
+		return $this;
+	}
+
+	public function getVideo()
+	{
+		return $this->video;
+	}
+
+	public function setLink($link)
+	{
+		$this->link = $link;
+
+		return $this;
+	}
+
+	public function getLink()
+	{
+		return $this->link;
 	}
 
 	/**
@@ -178,6 +227,38 @@ class Slide
 	}
 
 	/**
+	 * Set media
+	 *
+	 * @param string $media
+	 *
+	 * @return Slide
+	 */
+	public function setMedia($media)
+	{
+		$this->media = $media;
+
+		return $this;
+	}
+
+	/**
+	 * Get media
+	 *
+	 * @return string
+	 */
+	public function getMedia()
+	{
+		return $this->media;
+	}
+
+	public function getWebPreview()
+	{
+		if ($this->media) {
+			return $this->media->getWebPreview();
+		}
+		return '/images/defaults/document-icon.png';
+	}
+
+	/**
 	 * Set mail
 	 *
 	 * @param string $mail
@@ -202,10 +283,67 @@ class Slide
 	}
 
 	/**
+	 * Set parent
+	 *
+	 * @param string $parent
+	 *
+	 * @return Slide
+	 */
+	public function setParent($parent)
+	{
+		$this->parent = $parent;
+
+		return $this;
+	}
+
+	/**
+	 * Get parent
+	 *
+	 * @return string
+	 */
+	public function getParent()
+	{
+		return $this->parent;
+	}
+
+	/**
+	 * Add children
+	 *
+	 * @param \Maci\MailerBundle\Entity\Slide $children
+	 * @return Slide
+	 */
+	public function addChild(\Maci\MailerBundle\Entity\Slide $children)
+	{
+		$this->children[] = $children;
+
+		return $this;
+	}
+
+	/**
+	 * Remove children
+	 *
+	 * @param \Maci\MailerBundle\Entity\Slide $children
+	 */
+	public function removeChild(\Maci\MailerBundle\Entity\Slide $children)
+	{
+		$this->children->removeElement($children);
+	}
+
+	/**
+	 * Get children
+	 *
+	 * @return \Doctrine\Common\Collections\Collection 
+	 */
+	public function getChildren()
+	{
+		return $this->children;
+	}
+
+	/**
 	 * _toString()
 	 */
 	public function __toString()
 	{
-		return 'Slide_'.$this->getId();
+		return 'MailSlide_'.$this->getId();
 	}
 }
