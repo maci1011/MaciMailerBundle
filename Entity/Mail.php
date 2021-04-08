@@ -28,29 +28,19 @@ class Mail
 	private $type;
 
 	/**
+	 * @var string
+	 */
+	private $sender;
+
+	/**
 	 * @var array
 	 */
-	private $_to;
+	private $recipient;
 
 	/**
 	 * @var string
 	 */
 	private $header;
-
-	/**
-	 * @var integer
-	 */
-	private $_index;
-
-	/**
-	 * @var string
-	 */
-	private $_from;
-
-	/**
-	 * @var string
-	 */
-	private $bcc;
 
 	/**
 	 * @var string
@@ -68,6 +58,11 @@ class Mail
 	private $content;
 
 	/**
+	 * @var json
+	 */
+	private $data;
+
+	/**
 	 * @var string
 	 */
 	private $locale;
@@ -78,24 +73,19 @@ class Mail
 	private $public;
 
 	/**
-	 * @var \DateTime
-	 */
-	private $sended;
-
-	/**
 	 * @var bolean
 	 */
 	private $removed;
 
 	/**
-	 * @var \Maci\UserBundle\Entity\User
-	 */
-	private $user;
-
-	/**
 	 * @var \Doctrine\Common\Collections\Collection
 	 */
 	private $slides;
+
+	/**
+	 * @var \Maci\UserBundle\Entity\User
+	 */
+	private $user;
 
 
 	/**
@@ -104,12 +94,15 @@ class Mail
 	public function __construct()
 	{
 		$this->template = 'MaciMailerBundle:Templates:default.html.twig';
-		$this->type = 'mail';
+		$this->type = $this->getTypes()[0];
 		$this->token = md5(
 			'MaciMailerBundle_Entity_Mail-' . rand(10000, 99999) . '-' . 
 			date('h') . date('i') . date('s') . date('m') . date('d') . date('Y')
 		);
-		$this->_index = 0;
+		$this->data = [
+			'toIndex' => 0,
+			'sendList' => []
+		];
 		$this->public = false;
 		$this->removed = false;
 		$this->slides = new \Doctrine\Common\Collections\ArrayCollection();
@@ -198,77 +191,131 @@ class Mail
 	}
 
 	/**
-	 * Set to
+	 * Get Type Array
+	 */
+	static public function getTypeArray()
+	{
+		return [
+			'Unknown' => 'unknown',
+			'Message' => 'message',
+			'Newsletter' => 'newsletter',
+			'Notify' => 'notify'
+		];
+	}
+
+	public function getTypeLabel()
+	{
+		$array = $this->getTypeArray();
+		$key = array_search($this->type, $array);
+		if ($key) {
+			return $key;
+		}
+		$str = str_replace('_', ' ', $this->type);
+		return ucwords($str);
+	}
+
+	static public function getTypes()
+	{
+		$list = [];
+		foreach (Mail::getTypeArray() as $key => $value) {
+			$list[] = $value;
+		}
+		return $list;
+	}
+
+	/**
+	 * Set recipient
 	 *
-	 * @param array $to
+	 * @param array $recipient
 	 *
 	 * @return Mail
 	 */
-	public function setTo($to)
+	public function setRecipient($recipient)
 	{
-		$this->_to = $to;
+		$this->recipient = $recipient;
 
 		return $this;
 	}
 
-	public function addTo($to)
+	public function addRecipient($recipient)
 	{
-		if (!is_array($this->_to)) {
-			$this->_to = array();
+		if (!is_array($this->recipient)) {
+			$this->recipient = array();
 		}
 
-		if (is_array($to)) {
-			$this->_to = array_merge($this->_to, $to);
+		if (is_array($recipient)) {
+			$this->recipient = array_merge($this->recipient, $recipient);
 		}
 
 		return $this;
 	}
 
 	/**
-	 * Get to
+	 * Set sender
+	 *
+	 * @return Mail
+	 */
+	public function setSender($sender, $header = false)
+	{
+		$this->sender = $_sender;
+
+		if ($header) {
+			$this->header = $header;
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Get sender
+	 *
+	 * @return string
+	 */
+	public function getSender()
+	{
+		return $this->sender;
+	}
+
+	/**
+	 * Get recipient
 	 *
 	 * @return array
 	 */
-	public function getTo()
+	public function getRecipient()
 	{
-		return $this->_to;
+		return $this->recipient;
 	}
 
-	public function get_to()
+	public function getRecipientMails()
 	{
-		return $this->getTo();
+		return array_keys($this->recipient);
 	}
 
-	public function getToMails()
-	{
-		return array_keys($this->_to);
-	}
-
-	public function getCurrentTo()
+	public function getCurrentRecipient()
 	{
 		if (!$this->isFinish()) {
 			$i = 0;
-			$to = false;
-			foreach ($this->_to as $key => $value) {
-				if ( $i === $this->_index ) {
-					$to = array($key, $value);
+			$recipient = false;
+			foreach ($this->recipient as $key => $value) {
+				if ( $i === $this->getIndex() ) {
+					$recipient = array($key, $value);
 					break;
 				}
 				$i++;
 			}
-			return $to;
+			return $recipient;
 		}
 		return false;
 	}
 
-	public function getToLength()
+	public function getRecipientLength()
 	{
-		return count($this->_to);
+		return count($this->recipient);
 	}
 
-	public function getToLeftovers()
+	public function getRecipientLeftovers()
 	{
-		return ( $this->getToLength() - $this->_index );
+		return ( $this->getRecipientLength() - $this->getIndex() );
 	}
 
 	/**
@@ -293,109 +340,6 @@ class Mail
 	public function getHeader()
 	{
 		return $this->header;
-	}
-
-	/**
-	 * Set index
-	 *
-	 * @param integer $index
-	 *
-	 * @return Mail
-	 */
-	public function setIndex($index)
-	{
-		$this->_index = $index;
-
-		return $this;
-	}
-
-	public function increaseIndex($index = 1)
-	{
-		$this->_index += $index;
-
-		return $this;
-	}
-
-	/**
-	 * end()
-	 */
-	public function end()
-	{
-		$this->_index = $this->getToLength();
-
-		return $this;
-	}
-
-	/**
-	 * Get index
-	 *
-	 * @return integer
-	 */
-	public function getIndex()
-	{
-		return $this->_index;
-	}
-
-	public function get_index()
-	{
-		return $this->getIndex();
-	}
-
-	/**
-	 * Set from
-	 *
-	 * @param string $from
-	 *
-	 * @return Mail
-	 */
-	public function setFrom($from, $header = false)
-	{
-		$this->_from = $from;
-
-		if ($header) {
-			$this->header = $header;
-		}
-
-		return $this;
-	}
-
-	/**
-	 * Get from
-	 *
-	 * @return string
-	 */
-	public function getFrom()
-	{
-		return $this->_from;
-	}
-
-	public function get_from()
-	{
-		return $this->getFrom();
-	}
-
-	/**
-	 * Set bcc
-	 *
-	 * @param string $bcc
-	 *
-	 * @return Mail
-	 */
-	public function setBcc($bcc)
-	{
-		$this->bcc = $bcc;
-
-		return $this;
-	}
-
-	/**
-	 * Get bcc
-	 *
-	 * @return string
-	 */
-	public function getBcc()
-	{
-		return $this->bcc;
 	}
 
 	/**
@@ -470,6 +414,37 @@ class Mail
 		return $this->content;
 	}
 
+	/**
+	 * Set data
+	 *
+	 * @param string $data
+	 *
+	 * @return Mail
+	 */
+	public function setData($data)
+	{
+		$this->data = $data;
+
+		return $this;
+	}
+
+	/**
+	 * Get data
+	 *
+	 * @return string
+	 */
+	public function getData()
+	{
+		return $this->data;
+	}
+
+	/**
+	 * Set locale
+	 *
+	 * @param string $locale
+	 *
+	 * @return Mail
+	 */
 	public function setLocale($locale)
 	{
 		$this->locale = $locale;
@@ -477,6 +452,11 @@ class Mail
 		return $this;
 	}
 
+	/**
+	 * Get locale
+	 *
+	 * @return string
+	 */
 	public function getLocale()
 	{
 		return $this->locale;
@@ -507,35 +487,6 @@ class Mail
 	}
 
 	/**
-	 * Set sended
-	 *
-	 * @param \DateTime $sended
-	 *
-	 * @return Mail
-	 */
-	public function setSended($sended)
-	{
-		$this->sended = $sended;
-
-		return $this;
-	}
-
-	/**
-	 * Get sended
-	 *
-	 * @return \DateTime
-	 */
-	public function getSended()
-	{
-		return $this->sended;
-	}
-
-	public function setSendedValue()
-	{
-		$this->sended = new \DateTime();
-	}
-
-	/**
 	 * Set removed
 	 *
 	 * @param boolean $removed
@@ -557,30 +508,6 @@ class Mail
 	public function getRemoved()
 	{
 		return $this->removed;
-	}
-
-	/**
-	 * Set user
-	 *
-	 * @param \Maci\UserBundle\Entity\User $user
-	 *
-	 * @return Subscriber
-	 */
-	public function setUser(\Maci\UserBundle\Entity\User $user = null)
-	{
-		$this->user = $user;
-
-		return $this;
-	}
-
-	/**
-	 * Get user
-	 *
-	 * @return \Maci\UserBundle\Entity\User
-	 */
-	public function getUser()
-	{
-		return $this->user;
 	}
 
 	/**
@@ -617,15 +544,66 @@ class Mail
 	}
 
 	/**
+	 * Set user
+	 *
+	 * @param \Maci\UserBundle\Entity\User $user
+	 *
+	 * @return Subscriber
+	 */
+	public function setUser(\Maci\UserBundle\Entity\User $user = null)
+	{
+		$this->user = $user;
+
+		return $this;
+	}
+
+	/**
+	 * Get user
+	 *
+	 * @return \Maci\UserBundle\Entity\User
+	 */
+	public function getUser()
+	{
+		return $this->user;
+	}
+
+	/**
+	 * Get index
+	 *
+	 * @return integer
+	 */
+	public function getIndex()
+	{
+		return $this->data['index'];
+	}
+
+	public function setIndex($index)
+	{
+		$this->data['index'] = $index;
+	}
+
+	public function increaseIndex($index = 1)
+	{
+		$this->data['index'] += $index;
+	}
+
+	public function end()
+	{
+		$this->data['index'] = $this->getRecipientLength();
+
+		return $this;
+	}
+
+	/**
 	 * isFinish()
 	 */
 	public function isFinish()
 	{
-		return !( $this->_index < $this->getToLength() );
+		return !( $this->getIndex() < $this->getRecipientLength() );
 	}
 
 	/**
-	 * _toString()
+	 * toString()
 	 */
 	public function __toString()
 	{

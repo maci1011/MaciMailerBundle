@@ -33,7 +33,12 @@ class DefaultController extends AbstractController
 			->getRepository('MaciMailerBundle:Mail')
 			->findOneByToken( $token );
 
-		return $this->render('@MaciMailer/Mailer/show.html.twig', array('mail' => $mail));
+		$user = $this->getUser();
+
+		return $this->render('@MaciMailer/Mailer/show.html.twig', [
+			'mail' => $mail,
+			'user' => $user
+		]);
 	}
 
 	public function subscribeAction(Request $request)

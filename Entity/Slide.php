@@ -162,8 +162,10 @@ class Slide
 	static public function getTypeArray()
 	{
 		return [
-			'Default' => '@MaciMailer/Slide/default.html.twig',
-			'Foo' => '@MaciMailer/Slide/foo.html.twig'
+			'Default' => 'default',
+			'Header' => 'header',
+			'Gallery' => 'gallery',
+			'Foo' => 'foo'
 		];
 	}
 
@@ -315,6 +317,10 @@ class Slide
 	public function addChild(\Maci\MailerBundle\Entity\Slide $children)
 	{
 		$this->children[] = $children;
+
+		if ($this->type == 'default') {
+			$this->type = 'gallery';
+		}
 
 		return $this;
 	}

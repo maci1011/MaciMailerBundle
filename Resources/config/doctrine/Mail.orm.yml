@@ -15,20 +15,14 @@ Maci\MailerBundle\Entity\Mail:
         token:
             type: string
             length: 127
-        _to:
+        sender:
+            type: string
+            length: 63
+            nullable: true
+        recipient:
             type: array
             nullable: true
         header:
-            type: string
-            length: 63
-            nullable: true
-        _index:
-            type: smallint
-        _from:
-            type: string
-            length: 63
-            nullable: true
-        bcc:
             type: string
             length: 63
             nullable: true
@@ -45,16 +39,14 @@ Maci\MailerBundle\Entity\Mail:
         content:
             type: text
             nullable: true
+        data:
+            type: json
+            nullable: true
         locale:
             type: string
             length: 10
         public:
             type: boolean
-        sended:
-            type: datetime
-            nullable: true
-            # options:
-            #     default: CURRENT_TIMESTAMP
         removed:
             type: boolean
     manyToOne:

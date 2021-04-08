@@ -1,0 +1,24 @@
+
+<table>
+<tbody>
+
+<tr>
+	<td class="center">
+		<img class="header img-fluid" src="{{ path('maci_media_get', {'path': item.media.path}) }}" alt="{{ item.media }}" />
+	</td>
+</tr>
+
+<tr>
+	<td>
+		<h2 class="header item-title">{{ item.title ? item.title : 'mailer.slides.header.title'|matra('Gentile') }} @{{ user }},</h2>
+	</td>
+</tr>
+
+<tr>
+	<td>
+		<p class="header item-content">{{ item.content }}</p>
+	</td>
+</tr>
+
+</tbody>
+</table>
