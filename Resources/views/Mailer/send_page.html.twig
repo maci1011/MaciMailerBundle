@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<h3>Templates</h3>
+<h3>Send Page</h3>
 
 <div class="list-default">
 <table class="table table-striped">
@@ -12,7 +12,10 @@
 <thead>
 <tr class="list-header">
 	<th class="list-header">
-		<span class="list-title">Template</span>
+		<span class="list-title">Mail</span>
+	</th>
+	<th class="list-header">
+		<span class="list-title">Subject</span>
 	</th>
 	<th class="list-header">
 		<span class="list-title">Action</span>
@@ -22,17 +25,24 @@
 
 <tbody>
 
+{% for item in list %}
+
 <tr class="list-item">
 	<td>
-		<span>Confirmation Email</span>
+		<span>{{ item.name }}</span>
 	</td>
 	<td>
-		<a class="btn" href="{{ path('maci_mailer_templates_confirmation_email') }}" target="_blank">
+		<span>{{ item.subject }}</span>
+	</td>
+	<td>
+		<a class="btn" href="{{ path('maci_mailer_send_mail', {'token': item.token}) }}" target="_blank">
 			<span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
-			Show
+			Send Mail
 		</a>
 	</td>
 </tr>
+
+{% endfor %}
 
 </tbody>
 </table>

@@ -92,6 +92,28 @@ class DefaultController extends AbstractController
 		return $this->render('@MaciMailer/Mailer/templates.html.twig');
 	}
 
+	public function sendPageAction()
+	{
+		$list = $this->getDoctrine()->getManager()
+			->getRepository('MaciMailerBundle:Mail')
+			->findBy(['sended' => false, 'removed' => false]);
+
+		return $this->render('@MaciMailer/Mailer/send_page.html.twig', [
+			'list' => $list
+		]);
+	}
+
+	public function sendMailAction($token)
+	{
+		$item = $this->getDoctrine()->getManager()
+			->getRepository('MaciMailerBundle:Mail')
+			->findOneByToken($token);
+
+		return $this->render('@MaciMailer/Mailer/send_mail.html.twig', [
+			'item' => $item
+		]);
+	}
+
 	public function confirmationEmailTemplateAction()
 	{
 		$orders = $this->getDoctrine()->getManager()

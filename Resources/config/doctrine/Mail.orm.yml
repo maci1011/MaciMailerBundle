@@ -47,6 +47,8 @@ Maci\MailerBundle\Entity\Mail:
             length: 10
         public:
             type: boolean
+        sended:
+            type: boolean
         removed:
             type: boolean
     manyToOne:

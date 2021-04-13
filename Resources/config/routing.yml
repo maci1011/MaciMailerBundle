@@ -1,4 +1,13 @@
 
+maci_mailer_send_mail:
+    path:     /mailer/send-mail/{token}
+    defaults: { _controller: MaciMailerBundle:Default:sendMail }
+
+maci_mailer_send_page:
+    path:     /mailer/send-page
+    defaults: { _controller: MaciMailerBundle:Default:sendPage, section: mails }
+
+
 maci_mailer_templates_confirmation_email:
     path:     /mailer/templates/confirmation-email
     defaults: { _controller: MaciMailerBundle:Default:confirmationEmailTemplate }
@@ -6,6 +15,7 @@ maci_mailer_templates_confirmation_email:
 maci_mailer_templates:
     path:     /mailer/templates
     defaults: { _controller: MaciMailerBundle:Default:templates, section: mails }
+
 
 maci_mailer:
     path:     /mailer

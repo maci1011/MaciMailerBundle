@@ -73,6 +73,11 @@ class Mail
 	private $public;
 
 	/**
+	 * @var boolean
+	 */
+	private $sended;
+
+	/**
 	 * @var bolean
 	 */
 	private $removed;
@@ -104,6 +109,7 @@ class Mail
 			'sendList' => []
 		];
 		$this->public = false;
+		$this->sended = false;
 		$this->removed = false;
 		$this->slides = new \Doctrine\Common\Collections\ArrayCollection();
 	}
@@ -484,6 +490,30 @@ class Mail
 	public function getPublic()
 	{
 		return $this->public;
+	}
+
+	/**
+	 * Set sended
+	 *
+	 * @param boolean $sended
+	 *
+	 * @return Mail
+	 */
+	public function setSended($sended)
+	{
+		$this->sended = $sended;
+
+		return $this;
+	}
+
+	/**
+	 * Get sended
+	 *
+	 * @return boolean
+	 */
+	public function getSended()
+	{
+		return $this->sended;
 	}
 
 	/**
