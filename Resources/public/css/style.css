@@ -1,4 +1,8 @@
 
-#settings {
+#content {
 	text-align: right;
+}
+
+#actions > span {
+	display: block;
 }

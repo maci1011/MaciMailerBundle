@@ -1,4 +1,5 @@
 {% extends "@MaciPage/base.html.twig" %}
+
 {% block _ga %}{% endblock %}
 {% block stylesheets %}
 	{{ parent() }}
@@ -12,19 +13,28 @@
 
 {% block body %}
 
-<div class="container py-4">
+<style type="text/css">
+
+#content {
+	text-align: right;
+}
+
+#actions > span {
+	display: block;
+}
+
+</style>
+
+<div id="mail" class="container py-4" data-id="{{ item.id }}">
 <div class="row">
 
 <div id="actions" class="col-sm-6">
 
-<h3>Send Mail</h3>
-
-<span>Mail: {{ item.name }}</span><br/>
-<span>Subject: {{ item.subject }}</span>
+<h3>...</h3>
 
 </div>
 
-<div id="settings" class="col-sm-6">
+<div id="content" class="col-sm-6">
 
 <h3>...</h3>
 
