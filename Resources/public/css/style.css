@@ -1,5 +1,13 @@
 
+h3 {
+	padding: 30px 0 15px;
+}
+
 #content {
+	text-align: right;
+}
+
+#content .nav-item {
 	text-align: right;
 }
 
