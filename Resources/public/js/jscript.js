@@ -5,32 +5,128 @@ var maciMailer = function (options) {
 
 	var _defaults = {},
 
-		mailId, mail, subscribers, sendList, addList
+		subscribers = false,
+		_last_action = false,
+
+		mailId, mail,
+		selected_sub,
+		recipients, selected_re,
+		sent,
+		_index
 
 	;
 
 	_obj = {
 
 	getMail: function(id) {
-		id = parseInt(id);
-		if (id < 1) {
+		if (!_obj.checkData(id)) {
 			return false;
 		}
-		mailId = id;
-		_obj.getMailData();
-	},
-
-	getMailData: function() {
 		$.ajax({
 			type: 'GET',
 			data: {},
 			url: '/mcm/view/mails/mail/show/' + mailId,
 			success: function(d,s,x) {
 				mail = d.item;
+				recipients = mail.data.recipients ? mail.data.recipients : [];
+				sent = mail.data.sent ? mail.data.sent : [];
+				if (mail.data.index) {
+					_index = mail.data.index;
+				}
 				_obj.showMenu();
-				_obj.getSubribersList();
+				_obj.showLastAction();
 			}
 		});
+	},
+
+	checkData: function(id) {
+		_obj.resetMailData();
+		id = parseInt(id);
+		if (id < 1) {
+			return false;
+		}
+		mailId = id;
+		if (subscribers === false || !subscribers.length) {
+			_obj.getSubribers();
+			return false;
+		}
+		return true;
+	},
+
+	resetMailData: function() {
+		mailId = false;
+		mail = false;
+		selected_sub = [];
+		recipients = [];
+		selected_re = [];
+		sent = [];
+		_index = -1;
+		
+		$('#actions').html('');
+		$('#content').html('');
+	},
+
+	getSubribers: function() {
+		$.ajax({
+			type: 'GET',
+			data: {},
+			url: '/mcm/view/mails/subscriber/list',
+			success: function(d,s,x) {
+				if (Array.isArray(d.list) && d.list.length) {
+					subscribers = d.list;
+					_obj.getMail(mailId);
+				}
+			}
+		});
+	},
+
+	showSubribers: function() {
+		$('a[href="#subscribers"]').parent().addClass('active');
+		_last_action = "#subscribers";
+		$('#content').html('');
+		$('<h3/>').text('Subscribers List').appendTo('#content');
+		var ul = $('<ul/>').attr('class', 'navbar-nav ml-auto').appendTo('#content');
+		ul.wrap('<nav/>').parent().attr('class', 'navbar navbar-light py-0');
+		var tot = 0;
+		for (var i = 0; i < subscribers.length; i++) {
+			if (recipients.includes(subscribers[i].id) || sent.includes(subscribers[i].id)) {
+				continue;
+			}
+			tot += 1;
+			$('<a/>').attr('class', 'nav-link').attr('href', '#')
+			.text(subscribers[i].name).appendTo(ul).click(function(e) {
+				e.preventDefault();
+				$(this).parent().toggleClass('active');
+				if ($(this).parent().hasClass('active')) {
+					selected_sub[selected_sub.length] = parseInt($(this).prop('id'));
+				} else {
+					selected_sub.splice(selected_sub.indexOf($(this).prop('id')), 1);
+				}
+			}).mouseenter(function (e) {
+				$(this).text(subscribers[parseInt($(this).prop('index'))].mail);
+			}).mouseleave(function (e) {
+				$(this).text(subscribers[parseInt($(this).prop('index'))].name);
+			}).prop('index', i).prop('id', subscribers[i].id).wrap('<li/>').parent().attr('class', 'nav-item' + (selected_sub.includes(subscribers[i].id) ? ' active' : ''));
+		}
+		if (tot === 0) {
+			$('#content').html('');
+			$('<h3/>').text('No Subscribers.').appendTo('#content');
+			return;
+		}
+		$('<button/>').appendTo('#content').click(function(e) {
+			e.preventDefault();
+			_obj.addSubribers();
+		}).text('Add Subscribers').attr('class', 'btn btn-success ml-auto mt-3');
+	},
+
+	addSubribers: function() {
+		for (var i = 0; i < selected_sub.length; i++) {
+			recipients[recipients.length] = selected_sub[i];
+		}
+		mail.data.recipients = recipients;
+		selected_sub = [];
+		_obj.showSubribers();
+		_obj.showMenu();
 	},
 
 	showMenu: function() {
@@ -43,13 +139,13 @@ var maciMailer = function (options) {
 		$('<a/>').attr('class', 'nav-link').attr('href', '#subscribers')
 		.text('Subscribers').appendTo(actionsUl).click(function(e) {
 			actionsUl.children().removeClass('active');
-			_obj.showSubribersList();
+			_obj.showSubribers();
 		}).wrap('<li/>').parent().attr('class', 'nav-item');
 
-		$('<a/>').attr('class', 'nav-link').attr('href', '#sendList')
-		.text('Send List').appendTo(actionsUl).click(function(e) {
+		$('<a/>').attr('class', 'nav-link').attr('href', '#recipients')
+		.text('Recipients').appendTo(actionsUl).click(function(e) {
 			actionsUl.children().removeClass('active');
-			_obj.showSendList();
+			_obj.showRecipients();
 		}).wrap('<li/>').parent().attr('class', 'nav-item');
 
 		$('<a/>').attr('class', 'nav-link').attr('href', '#sendMail')
@@ -66,103 +162,76 @@ var maciMailer = function (options) {
 		$('<span/>').html('Name: <b>' + mail.name + '</b>').attr('class', 'navbar-text').appendTo(mailUl).wrap('<li/>').parent().attr('class', 'nav-item');
 		$('<span/>').html('Subject: <b>' + mail.subject + '</b>').attr('class', 'navbar-text').appendTo(mailUl).wrap('<li/>').parent().attr('class', 'nav-item');
 
-		$('<span/>').html('Send List Length: <b>' + mail.data.sendList.length + '</b>').attr('class', 'navbar-text').appendTo(mailUl).wrap('<li/>').parent().attr('class', 'nav-item');
-		$('<span/>').html('Index Position: <b>' + mail.data.toIndex + '</b>').attr('class', 'navbar-text').appendTo(mailUl).wrap('<li/>').parent().attr('class', 'nav-item');
+		$('<span/>').html('Recipients List Length: <b>' + recipients.length + '</b>').attr('class', 'navbar-text').appendTo(mailUl).wrap('<li/>').parent().attr('class', 'nav-item');
+		$('<span/>').html('Index Position: <b>' + _index + '</b>').attr('class', 'navbar-text').appendTo(mailUl).wrap('<li/>').parent().attr('class', 'nav-item');
+		$('<span/>').html('Sent List Length: <b>' + sent.length + '</b>').attr('class', 'navbar-text').appendTo(mailUl).wrap('<li/>').parent().attr('class', 'nav-item');
 
 		$('<a/>').attr('class', 'nav-link').attr('href', '/mailer/show/' + mail.token).attr('target', '_black')
 		.html('<i class="fas fa-eye"></i> Show Template').appendTo(mailUl).wrap('<li/>').parent().attr('class', 'nav-item');
 	},
 
-	showSendMail: function() {
-		$('a[href="#sendMail"]').parent().addClass('active');
-		$('#content').html('');
-		$('<h3/>').text('Send Mail').appendTo('#content');
+	showLastAction: function() {
+		if (_last_action == "#subscribers") {
+			$('a[href="#subscribers"]').click();
+		} else if (_last_action == "#recipients") {
+			$('a[href="#recipients"]').click();
+		} else if (_last_action == "#sendMail") {
+			$('a[href="#sendMail"]').click();
+		}
+		$('a[href="#subscribers"]').click();
 	},
 
-	showSendList: function() {
-		$('a[href="#sendList"]').parent().addClass('active');
+	showRecipients: function() {
+		$('a[href="#recipients"]').parent().addClass('active');
+		_last_action = "#recipients";
 		$('#content').html('');
+		if (!recipients.length) {
+			$('<h3/>').text('No Recipients.').appendTo('#content');
+			return;
+		}
 		$('<h3/>').text('Send List').appendTo('#content');
 		var ul = $('<ul/>').attr('class', 'navbar-nav ml-auto').appendTo('#content');
 		ul.wrap('<nav/>').parent().attr('class', 'navbar navbar-light py-0');
 		for (var i = 0; i < subscribers.length; i++) {
-			if (!sendList.includes(subscribers[i].id)) {
+			if (!recipients.includes(subscribers[i].id)) {
 				continue;
 			}
 			$('<a/>').attr('class', 'nav-link').attr('href', '#')
 			.text(subscribers[i].name).appendTo(ul).click(function(e) {
 				e.preventDefault();
-				addList[$(this).prop('index')][2] = $(this).parent().toggleClass('active').hasClass('active');
-			}).prop('index', i).wrap('<li/>').parent().attr('class', 'nav-item' + (addList[i][2] ? ' active' : ''));
+				$(this).parent().toggleClass('active');
+				if ($(this).parent().hasClass('active')) {
+					selected_re[selected_re.length] = parseInt($(this).prop('id'));
+				} else {
+					selected_re.splice(selected_re.indexOf($(this).prop('id')), 1);
+				}
+			}).mouseenter(function (e) {
+				$(this).text(subscribers[parseInt($(this).prop('index'))].mail);
+			}).mouseleave(function (e) {
+				$(this).text(subscribers[parseInt($(this).prop('index'))].name);
+			}).prop('index', i).prop('id', subscribers[i].id).wrap('<li/>').parent().attr('class', 'nav-item' + (selected_re.includes(subscribers[i].id) ? ' active' : ''));
 		}
 		$('<button/>').appendTo('#content').click(function(e) {
 			e.preventDefault();
 			_obj.removeSubribers();
-		}).text('Remove Subribers').attr('class', 'btn btn-success ml-auto mt-3');
+		}).text('Remove Subscribers').attr('class', 'btn btn-success ml-auto mt-3');
 	},
 
 	removeSubribers: function() {
-		for (var i = 0; i < addList.length; i++) {
-			if (addList[i][2] && sendList.includes(addList[i][0])) {
-				sendList.splice(sendList.indexOf(addList[i][0]), 1);
-			}
-			addList[i][2] = false;
+		for (var i = 0; i < selected_re.length; i++) {
+			recipients.splice(recipients.indexOf(selected_re[i]), 1);
 		}
-		mail.data.sendList = sendList;
-		_obj.showSendList();
+		mail.data.recipients = recipients;
+		selected_re = [];
+		_obj.showRecipients();
 		_obj.showMenu();
 	},
 
-	getSubribersList: function() {
-		subscribers = [];
-		sendList = [];
-		addList = [];
-		$.ajax({
-			type: 'GET',
-			data: {},
-			url: '/mcm/view/mails/subscriber/list',
-			success: function(d,s,x) {
-				subscribers = d.list;
-				for (var i = 0; i < subscribers.length; i++) {
-					addList[i] = [subscribers[i].id, sendList.includes(subscribers[i].id), false];
-				}
-				_obj.showSubribersList();
-			}
-		});
-	},
-
-	showSubribersList: function() {
-		$('a[href="#subscribers"]').parent().addClass('active');
+	showSendMail: function() {
+		$('a[href="#sendMail"]').parent().addClass('active');
+		_last_action = "#sendMail";
 		$('#content').html('');
-		$('<h3/>').text('Subribers List').appendTo('#content');
-		var ul = $('<ul/>').attr('class', 'navbar-nav ml-auto').appendTo('#content');
-		ul.wrap('<nav/>').parent().attr('class', 'navbar navbar-light py-0');
-		for (var i = 0; i < subscribers.length; i++) {
-			if (sendList.includes(subscribers[i].id)) {
-				continue;
-			}
-			$('<a/>').attr('class', 'nav-link').attr('href', '#')
-			.text(subscribers[i].name).appendTo(ul).click(function(e) {
-				e.preventDefault();
-				addList[$(this).prop('index')][1] = $(this).parent().toggleClass('active').hasClass('active');
-			}).prop('index', i).wrap('<li/>').parent().attr('class', 'nav-item' + (addList[i][1] ? ' active' : ''));
-		}
-		$('<button/>').appendTo('#content').click(function(e) {
-			e.preventDefault();
-			_obj.addSubribers();
-		}).text('Add Subribers').attr('class', 'btn btn-success ml-auto mt-3');
-	},
-
-	addSubribers: function() {
-		for (var i = 0; i < addList.length; i++) {
-			if (addList[i][1] && !sendList.includes(addList[i][0])) {
-				sendList[sendList.length] = addList[i][0];
-			}
-			addList[i][1] = false;
-		}
-		mail.data.sendList = sendList;
-		_obj.showSubribersList();
-		_obj.showMenu();
+		$('<h3/>').text('Send Mail').appendTo('#content');
 	}
 
 	}; // _obj

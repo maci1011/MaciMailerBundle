@@ -105,8 +105,9 @@ class Mail
 			date('h') . date('i') . date('s') . date('m') . date('d') . date('Y')
 		);
 		$this->data = [
-			'toIndex' => 0,
-			'sendList' => []
+			'index' => 0,
+			'recipients' => [],
+			'sent' => []
 		];
 		$this->public = false;
 		$this->sended = false;
