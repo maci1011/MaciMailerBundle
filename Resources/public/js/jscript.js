@@ -69,15 +69,33 @@ var maciMailer = function (options) {
 	getSubribers: function() {
 		$.ajax({
 			type: 'GET',
-			data: {},
-			url: '/mcm/view/mails/subscriber/list',
+			data: {
+				'data': {
+					'list': {
+						'section': 'mails',
+						'entity': 'subscriber'
+					}
+				}
+			},
+			url: '/mcm/ajax',
 			success: function(d,s,x) {
-				if (Array.isArray(d.list) && d.list.length) {
-					subscribers = d.list;
+				if (Array.isArray(d.data.list) && d.data.list.length) {
+					subscribers = d.data.list;
 					_obj.getMail(mailId);
 				}
 			}
 		});
+		// $.ajax({
+		// 	type: 'GET',
+		// 	data: {},
+		// 	url: '/mcm/view/mails/subscriber/list',
+		// 	success: function(d,s,x) {
+		// 		if (Array.isArray(d.list) && d.list.length) {
+		// 			subscribers = d.list;
+		// 			_obj.getMail(mailId);
+		// 		}
+		// 	}
+		// });
 	},
 
 	showSubribers: function() {
