@@ -8,11 +8,31 @@
 	</td>
 </tr>
 
+{% if user is defined %}
+
 <tr>
 	<td>
-		<h2 class="header item-title">{{ item.title ? item.title : 'mailer.slides.header.title'|matra('Gentile') }} @{{ user }},</h2>
+		<h2 class="header item-title">{{ item.title ? item.title : 'mailer.slides.header.hi'|matra('Ciao') }} @{{ user }},</h2>
 	</td>
 </tr>
+
+{% elseif subscriber is defined %}
+
+<tr>
+	<td>
+		<h2 class="header item-title">{{ item.title ? item.title : 'mailer.slides.header.hi'|matra('Ciao') }} {{ subscriber.header }},</h2>
+	</td>
+</tr>
+
+{% else %}
+
+<tr>
+	<td>
+		<h2 class="header item-title">{{ item.title ? item.title : 'mailer.slides.header.hi'|matra('Ciao') }},</h2>
+	</td>
+</tr>
+
+{% endif %}
 
 <tr>
 	<td>

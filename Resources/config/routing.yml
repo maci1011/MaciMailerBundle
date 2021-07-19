@@ -7,6 +7,10 @@ maci_mailer_send_page:
     path:     /mailer/send-page
     defaults: { _controller: MaciMailerBundle:Default:sendPage, section: mails }
 
+maci_mailer_send_next:
+    path:     /mailer/send-next
+    defaults: { _controller: MaciMailerBundle:Default:sendNext }
+
 
 maci_mailer_templates_confirmation_email:
     path:     /mailer/templates/confirmation-email

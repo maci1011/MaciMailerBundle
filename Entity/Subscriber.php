@@ -167,6 +167,16 @@ class Subscriber
 	}
 
 	/**
+	 * Get header
+	 *
+	 * @return string 
+	 */
+	public function getHeader()
+	{
+		return $this->name.' '.$this->surname;
+	}
+
+	/**
 	 * Set birthdate
 	 *
 	 * @param string $birthdate

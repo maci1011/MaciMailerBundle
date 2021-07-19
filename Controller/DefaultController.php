@@ -3,6 +3,7 @@
 namespace Maci\MailerBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Intl\Locales;
 
@@ -130,4 +131,83 @@ class DefaultController extends AbstractController
 	// 	$form = $this->getSubscribeForm();
 	// 	return $this->render('@MaciMailer/Mailer/subscribe.html.twig', array('form' => $form));
 	// }
+
+	public function sendNextAction(Request $request)
+	{
+		if (!$request->isXmlHttpRequest()) {
+			return $this->redirect($this->generateUrl('homepage'));
+		}
+
+		if ($request->getMethod() !== 'POST') {
+			return new JsonResponse(['success' => false, 'error' => 'Bad Request.'], 200);
+		}
+
+		$mail = $this->getDoctrine()->getManager()
+			->getRepository('MaciMailerBundle:Mail')
+			->findOneById($request->get('id'));
+
+		if (!$mail) {
+			return new JsonResponse(['success' => false, 'error' => 'Mail not found.'], 200);
+		}
+
+		$data = $mail->getData();
+
+		$index = -1;
+		$id = false;
+
+		for ($i=0; $i < count($data['recipients']); $i++) {
+			if ($data['recipients'][$i]['sent'] === "false") {
+				$index = $i;
+				$id = intval($data['recipients'][$i]['id']);
+				break;
+			}
+		}
+
+		if (!$id) {
+			return new JsonResponse(['success' => true, 'end' => true], 200);
+		}
+
+		$subscriber = $this->getDoctrine()->getManager()
+			->getRepository('MaciMailerBundle:Subscriber')
+			->findOneById($id);
+
+		if (!$subscriber) {
+			return new JsonResponse(['success' => false, 'error' => 'Subscriber not found.'], 200);
+		}
+
+		$message = $mail->getSwiftMessage();
+
+		if (!$mail->getSender()) {
+			$message->setFrom(
+				$this->get('service_container')->getParameter('server_email'),
+				$this->get('service_container')->getParameter('server_email_int')
+			);
+		}
+
+		if (!$mail->getContent()) {
+			if (array_key_exists('template', $mail->getData())) {
+				$message->setBody(
+					$this->renderView($mail->getData()['template']['path'], array_merge(['mail' => $mail, 'subscriber' => $subscriber], $mail->getData()['template']['params']))
+				);
+			} else {
+				$message->setBody(
+					$this->renderView('@MaciMailer/Mailer/show.html.twig', ['mail' => $mail, 'subscriber' => $subscriber])
+				);
+			}
+		}
+
+		$message->setTo($subscriber->getMail(), $subscriber->getHeader());
+
+		// ---> send message
+		if ($this->container->get('kernel')->getEnvironment() == "prod") $this->get('mailer')->send($message);
+
+		$data['recipients'][$index]['sent'] = date("c", time());
+		$data['recipients'][$index]['header'] = $subscriber->getHeader();
+		$data['recipients'][$index]['mail'] = $subscriber->getMail();
+
+		$em = $this->getDoctrine()->getManager();
+		$em->flush();
+
+		return new JsonResponse(['success' => true, 'id' => $id, 'data' => $data['recipients'][$index]], 200);
+	}
 }

@@ -33,11 +33,6 @@ class Mail
 	private $sender;
 
 	/**
-	 * @var array
-	 */
-	private $recipient;
-
-	/**
 	 * @var string
 	 */
 	private $header;
@@ -104,11 +99,7 @@ class Mail
 			'MaciMailerBundle_Entity_Mail-' . rand(10000, 99999) . '-' . 
 			date('h') . date('i') . date('s') . date('m') . date('d') . date('Y')
 		);
-		$this->data = [
-			'index' => 0,
-			'recipients' => [],
-			'sent' => []
-		];
+		$this->data = $this->getDefaultData();
 		$this->public = false;
 		$this->sended = false;
 		$this->removed = false;
@@ -223,38 +214,7 @@ class Mail
 
 	static public function getTypes()
 	{
-		$list = [];
-		foreach (Mail::getTypeArray() as $key => $value) {
-			$list[] = $value;
-		}
-		return $list;
-	}
-
-	/**
-	 * Set recipient
-	 *
-	 * @param array $recipient
-	 *
-	 * @return Mail
-	 */
-	public function setRecipient($recipient)
-	{
-		$this->recipient = $recipient;
-
-		return $this;
-	}
-
-	public function addRecipient($recipient)
-	{
-		if (!is_array($this->recipient)) {
-			$this->recipient = array();
-		}
-
-		if (is_array($recipient)) {
-			$this->recipient = array_merge($this->recipient, $recipient);
-		}
-
-		return $this;
+		return array_values(Mail::getTypeArray());
 	}
 
 	/**
@@ -264,7 +224,7 @@ class Mail
 	 */
 	public function setSender($sender, $header = false)
 	{
-		$this->sender = $_sender;
+		$this->sender = $sender;
 
 		if ($header) {
 			$this->header = $header;
@@ -281,48 +241,6 @@ class Mail
 	public function getSender()
 	{
 		return $this->sender;
-	}
-
-	/**
-	 * Get recipient
-	 *
-	 * @return array
-	 */
-	public function getRecipient()
-	{
-		return $this->recipient;
-	}
-
-	public function getRecipientMails()
-	{
-		return array_keys($this->recipient);
-	}
-
-	public function getCurrentRecipient()
-	{
-		if (!$this->isFinish()) {
-			$i = 0;
-			$recipient = false;
-			foreach ($this->recipient as $key => $value) {
-				if ( $i === $this->getIndex() ) {
-					$recipient = array($key, $value);
-					break;
-				}
-				$i++;
-			}
-			return $recipient;
-		}
-		return false;
-	}
-
-	public function getRecipientLength()
-	{
-		return count($this->recipient);
-	}
-
-	public function getRecipientLeftovers()
-	{
-		return ( $this->getRecipientLength() - $this->getIndex() );
 	}
 
 	/**
@@ -443,6 +361,30 @@ class Mail
 	public function getData()
 	{
 		return $this->data;
+	}
+
+	/**
+	 * Get default data
+	 *
+	 * @return array
+	 */
+	static public function getDefaultData()
+	{
+		return [
+			'recipients' => []
+		];
+	}
+
+	/**
+	 * Reset data
+	 *
+	 * @return Mail
+	 */
+	public function resetData()
+	{
+		$this->data = $this->getDefaultData();
+
+		return $this;
 	}
 
 	/**
@@ -598,39 +540,33 @@ class Mail
 		return $this->user;
 	}
 
-	/**
-	 * Get index
-	 *
-	 * @return integer
-	 */
-	public function getIndex()
-	{
-		return $this->data['index'];
-	}
+	// ---> Utils
 
-	public function setIndex($index)
+	public function getSwiftMessage()
 	{
-		$this->data['index'] = $index;
-	}
+		$message = (new \Swift_Message())
+			->setSubject($this->subject)
+			->setFrom($this->sender, $this->header)
+		;
 
-	public function increaseIndex($index = 1)
-	{
-		$this->data['index'] += $index;
-	}
+		if ($this->sender) {
+			$message->setFrom($this->sender, $this->header);
+		}
 
-	public function end()
-	{
-		$this->data['index'] = $this->getRecipientLength();
+		if ($this->content) {
+			$message->setBody($this->content, 'text/html');
+			if ($this->text) {
+				$message->addPart($this->text, 'text/plain');
+			}
+		} else if ($this->text) {
+			$message->setBody($this->text, 'text/plain');
+		}
 
-		return $this;
-	}
+		if (array_key_exists('bcc', $this->data)) {
+			$message->setBcc($this->data['bcc']);
+		}
 
-	/**
-	 * isFinish()
-	 */
-	public function isFinish()
-	{
-		return !( $this->getIndex() < $this->getRecipientLength() );
+		return $message;
 	}
 
 	/**

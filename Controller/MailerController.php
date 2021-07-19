@@ -12,33 +12,33 @@ class MailerController extends AbstractController
 
 	public function __construct()
 	{
-    }
+	}
 
-    public function getNewMail()
-    {
-        return new Mail;
-    }
+	public function getNewMail()
+	{
+		return new Mail;
+	}
 
-    /**
-     * get Swift Message
-     */
-    public function getSwiftMessage($mail)
-    {
-        $to = $mail->getCurrentTo();
+	/**
+	 * get Swift Message
+	 */
+	public function getSwiftMessage($mail)
+	{
+		$to = $mail->getCurrentTo();
 
-        if (!$to) {
-            return false;
-        }
+		if (!$to) {
+			return false;
+		}
 
-        $message = (new \Swift_Message())
-            ->setSubject($mail->getSubject())
-            ->setFrom($mail->getFrom(), $mail->getHeader())
-            ->setTo($to[0], $to[1])
-            ->setBcc($mail->getBcc())
-            ->setBody($mail->getContent(), 'text/html')
-            ->addPart($mail->getText(), 'text/plain')
-        ;
+		$message = (new \Swift_Message())
+			->setSubject($mail->getSubject())
+			->setFrom($mail->getFrom(), $mail->getHeader())
+			->setTo($to[0], $to[1])
+			->setBcc($mail->getBcc())
+			->setBody($mail->getContent(), 'text/html')
+			->addPart($mail->getText(), 'text/plain')
+		;
 
-        return $message;
-    }
+		return $message;
+	}
 }
