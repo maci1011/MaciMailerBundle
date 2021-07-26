@@ -66,6 +66,11 @@ class DefaultController extends AbstractController
 		));
 	}
 
+	// public function subscribeAction()
+	// {
+	// 	return $this->render('@MaciMailer/Mailer/subscribe.html.twig', array('form' => $this->getSubscribeForm()));
+	// }
+
 	public function getSubscribeForm(&$subscriber)
 	{
 		if (!$subscriber) {
@@ -125,12 +130,6 @@ class DefaultController extends AbstractController
 			'order' => $orders[rand(0,count($orders) - 1)]
 		]);
 	}
-
-	// public function subscribeAction()
-	// {
-	// 	$form = $this->getSubscribeForm();
-	// 	return $this->render('@MaciMailer/Mailer/subscribe.html.twig', array('form' => $form));
-	// }
 
 	public function sendNextAction(Request $request)
 	{
