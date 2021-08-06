@@ -52,6 +52,7 @@ class DefaultController extends AbstractController
 
 		if ($form->isSubmitted() && $form->isValid()) {
 
+			$subscriber->setNewsletter(true);
 			$subscriber->setLocale($request->getLocale());
 
 			$em = $this->getDoctrine()->getEntityManager();
