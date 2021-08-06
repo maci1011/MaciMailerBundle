@@ -41,6 +41,12 @@
 		{{ form_errors(form.mail) }}
 	</div>
 	
+	<div class="checkbox privacy">
+		<input id="form_privacy" type="checkbox" required="required" name="subscribe[privacy]" />
+		<label class="required" for="form_privacy">{{ 'read_privacy'|matla('I have read and agree to the') }} <a href="{{ path('maci_page', {'path': 'privacy'}) }}" target="_blank">{{ 'privacy_policy'|matla('Privacy Policy') }}</a></label>
+		<div class="form-errors">{{ form_errors(form.privacy) }}</div>
+	</div>
+
 	{% include "@MaciPage/Form/_optional_fields.html.twig" %}
 
 	{% if form.recaptcha is defined %}
@@ -48,12 +54,6 @@
 		{{ form_row(form.recaptcha) }}
 	</div>
 	{% endif %}
-
-	<div class="checkbox privacy">
-		<input id="form_privacy" type="checkbox" required="required" name="subscribe[privacy]" />
-		<label class="required" for="form_privacy">{{ 'read_privacy'|matla('I have read and agree to the') }} <a href="{{ path('maci_page', {'path': 'privacy'}) }}" target="_blank">{{ 'privacy_policy'|matla('Privacy Policy') }}</a></label>
-		<div class="form-errors">{{ form_errors(form.privacy) }}</div>
-	</div>
 
 	<div class="form-group">
     	{{ form_row(form._token) }}
