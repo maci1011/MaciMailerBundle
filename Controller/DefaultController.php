@@ -58,7 +58,7 @@ class DefaultController extends AbstractController
 			$em->persist($subscriber);
 			$em->flush();
 
-			return $this->redirect($this->generateUrl('maci_page', array('path' => 'subscription_complete')));
+			return $this->redirect($this->generateUrl('maci_page', array('path' => 'newsletter-completed')));
 		}
 
 		return $this->render('@MaciMailer/Mailer/subscribe.html.twig', array(

@@ -58,7 +58,7 @@
 	<div class="form-group">
     	{{ form_row(form._token) }}
 		<input type="hidden" name="subscribe[locale]" value="{{ app.request.locale }}">
-		<button id="form_send" class="btn btn-primary" name="subscribe[send]" type="submit">{{ 'form.subscribe'|matra('Subscribe') }}!</button>
+		<button id="form_subscribe" class="btn btn-primary" name="subscribe[subscribe]" type="submit">{{ 'form.subscribe'|matra('Subscribe') }}!</button>
 	</div>
 
 {{ form_end(form, {'render_rest': false}) }}

@@ -106,6 +106,9 @@ class Subscriber
 		$this->token = md5(uniqid());
 		$this->sex = false;
 		$this->removed = false;
+		$this->newsletter = false;
+		$this->sms = false;
+		$this->phone = false;
 	}
 
 
