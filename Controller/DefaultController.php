@@ -52,10 +52,19 @@ class DefaultController extends AbstractController
 
 		if ($form->isSubmitted() && $form->isValid()) {
 
+			$em = $this->getDoctrine()->getEntityManager();
+			$item = $em->getRepository('MaciMailerBundle:Subscriber')
+				->findOneByMail($form->getData()->getMail());
+
+			if ($item && !$item->getRemoved()) {
+				return $this->render('@MaciMailer/Mailer/subscribe.html.twig', array(
+					'form' => $form->createView()
+				));
+			}
+
 			$subscriber->setNewsletter(true);
 			$subscriber->setLocale($request->getLocale());
 
-			$em = $this->getDoctrine()->getEntityManager();
 			$em->persist($subscriber);
 			$em->flush();
 
