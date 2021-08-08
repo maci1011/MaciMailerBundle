@@ -15,7 +15,7 @@
 </ol>
 </nav>
 
-<h3 class="my-4">{{ 'user.subscribe' | matra('Subscribe') }}</h3>
+<h3 class="my-4">{{ 'form.subscribe.title' | matra('Subscribe') }}</h3>
 
 {{ form_start(form) }}
 
@@ -58,7 +58,7 @@
 	<div class="form-group">
     	{{ form_row(form._token) }}
 		<input type="hidden" name="subscribe[locale]" value="{{ app.request.locale }}">
-		<button id="form_subscribe" class="btn btn-primary" name="subscribe[subscribe]" type="submit">{{ 'form.subscribe'|matra('Subscribe') }}!</button>
+		<button id="form_subscribe" class="btn btn-primary" name="subscribe[subscribe]" type="submit">{{ 'form.subscribe'|matra('Subscribe') }}</button>
 	</div>
 
 {{ form_end(form, {'render_rest': false}) }}
