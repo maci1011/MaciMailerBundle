@@ -52,7 +52,8 @@ class SubscriberType extends AbstractType
 			->add('surname', null, ['required' => false])
 			->add('birthdate', null, ['required' => false, 'years' => $years])
 			->add('sex', ChoiceType::class, array(
-				'choices' => ['F' => 0, 'M' => 1]
+				'choices' => ['Female' => 0, 'Male' => 1],
+				'expanded' => true
 			))
 			->add('mail', EmailType::class, array(
 				'constraints' => new Email(array(

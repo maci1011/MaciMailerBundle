@@ -43,6 +43,10 @@ class SubscribeType extends AbstractType
 				))
 			))
 			->add('mobile')
+			->add('sex', ChoiceType::class, array(
+				'choices' => ['Female' => 0, 'Male' => 1],
+				'expanded' => true
+			))
 		;
 
 		if(is_array($options['locales'])) {
