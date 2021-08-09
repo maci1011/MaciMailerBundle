@@ -240,6 +240,7 @@ class Subscriber
 	public function setMail($mail)
 	{
 		$this->mail = $mail;
+		$this->newsletter = true;
 
 		return $this;
 	}
@@ -263,6 +264,7 @@ class Subscriber
 	public function setMobile($mobile)
 	{
 		$this->mobile = $mobile;
+		$this->phone = true;
 
 		return $this;
 	}

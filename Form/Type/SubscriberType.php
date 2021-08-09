@@ -68,7 +68,10 @@ class SubscriberType extends AbstractType
 				'choices' => $options['locales']
 			));
 		} else {
-			$builder->add('locale', LocaleType::class);
+			$builder->add('locale', ChoiceType::class, array(
+				'empty_data' => '',
+				'choices' => \Maci\AdminBundle\Controller\AdminController::getLocales()
+			));
 		}
 
 		$builder

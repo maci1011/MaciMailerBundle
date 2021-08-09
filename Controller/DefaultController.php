@@ -63,7 +63,6 @@ class DefaultController extends AbstractController
 				));
 			}
 
-			$subscriber->setNewsletter(true);
 			$subscriber->setLocale($request->getLocale());
 
 			$em->persist($subscriber);
