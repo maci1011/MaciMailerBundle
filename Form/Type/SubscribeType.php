@@ -42,6 +42,7 @@ class SubscribeType extends AbstractType
 					'message' => 'Insert your Email'
 				))
 			))
+			->add('mobile')
 		;
 
 		if(is_array($options['locales'])) {
