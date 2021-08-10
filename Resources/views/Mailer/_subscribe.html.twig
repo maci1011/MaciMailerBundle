@@ -48,6 +48,13 @@
 		{{ form_errors(form.mobile) }}
 	</div>
 
+	<div class="form-group">
+		<label for="subscribe_country">{{ 'form.country'|matra('Country') }}</label>
+		{{ form_widget(form.country) }}
+		<br/>
+		{{ form_errors(form.country) }}
+	</div>
+
 	<fieldset class="form-group form-inline pb-3">
 		<div id="subscribe_sex">
 			<div class="form-check">

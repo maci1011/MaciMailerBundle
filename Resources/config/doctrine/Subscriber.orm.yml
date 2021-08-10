@@ -28,6 +28,10 @@ Maci\MailerBundle\Entity\Subscriber:
             type: string
             length: 31
             nullable: true
+        country:
+            type: string
+            length: 2
+            nullable: true
         locale:
             type: string
             length: 10

@@ -9,6 +9,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CountryType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Form\Extension\Core\Type\LocaleType;
@@ -47,6 +48,11 @@ class SubscribeType extends AbstractType
 				'choices' => ['Female' => 0, 'Male' => 1],
 				'expanded' => true
 			))
+			->add('country', CountryType::class, array(
+				'label_attr' => array('class'=> 'sr-only'),
+				'placeholder' => 'Country',
+				'required' => false
+			));
 		;
 
 		if(is_array($options['locales'])) {

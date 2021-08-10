@@ -2,6 +2,8 @@
 
 namespace Maci\MailerBundle\Entity;
 
+use Symfony\Component\Intl\Intl;
+
 /**
  * Subscriber
  */
@@ -41,6 +43,11 @@ class Subscriber
 	 * @var string
 	 */
 	private $mobile;
+
+	/**
+	 * @var string
+	 */
+	private $country;
 
 	/**
 	 * @var string
@@ -277,6 +284,39 @@ class Subscriber
 	public function getMobile()
 	{
 		return $this->mobile;
+	}
+
+	/**
+	 * Set country
+	 *
+	 * @param string $country
+	 * @return Address
+	 */
+	public function setCountry($country)
+	{
+		$this->country = $country;
+
+		return $this;
+	}
+
+	/**
+	 * Get country
+	 *
+	 * @return string 
+	 */
+	public function getCountry()
+	{
+		return $this->country;
+	}
+
+	/**
+	 * Get country
+	 *
+	 * @return string 
+	 */
+	public function getCountryName()
+	{
+		return Intl::getRegionBundle()->getCountryName( $this->country );
 	}
 
 	/**
