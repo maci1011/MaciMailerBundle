@@ -18,12 +18,20 @@ use EWZ\Bundle\RecaptchaBundle\Form\Type\EWZRecaptchaType;
 use EWZ\Bundle\RecaptchaBundle\Validator\Constraints\IsTrue as RecaptchaTrue;
 
 use Maci\UserBundle\Form\Type\AddressType;
+use Maci\TranslatorBundle\Controller\TranslatorController;
 
 /**
  * Subscribe
  */
 class SubscribeType extends AbstractType
 {
+	protected $translator;
+
+	public function __construct(TranslatorController $translator)
+	{
+		$this->translator = $translator;
+	}
+
 	public function configureOptions(OptionsResolver $resolver)
 	{
 		$resolver->setDefaults(array(
@@ -50,7 +58,7 @@ class SubscribeType extends AbstractType
 			))
 			->add('country', CountryType::class, array(
 				'label_attr' => array('class'=> 'sr-only'),
-				'placeholder' => 'Country',
+				'placeholder' => $this->translator->getLabel('form.select-country', 'Select Country'),
 				'required' => false
 			));
 		;

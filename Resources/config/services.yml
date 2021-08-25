@@ -22,5 +22,6 @@ services:
 
     maci_mailer.form.type.subscribe:
         class: Maci\MailerBundle\Form\Type\SubscribeType
+        arguments: ["@maci.translator"]
         tags:
             - { name: form.type, alias: subscribe }
