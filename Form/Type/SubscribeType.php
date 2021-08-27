@@ -61,7 +61,7 @@ class SubscribeType extends AbstractType
 				'label_attr' => array('class'=> 'sr-only'),
 				'placeholder' => $this->translator->getLabel('form.select-country', 'Select Country'),
 				'required' => false
-			));
+			))
 		;
 
 		if(is_array($options['locales'])) {
