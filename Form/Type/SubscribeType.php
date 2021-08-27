@@ -54,7 +54,8 @@ class SubscribeType extends AbstractType
 			->add('mobile')
 			->add('sex', ChoiceType::class, array(
 				'choices' => ['Female' => 0, 'Male' => 1],
-				'expanded' => true
+				'expanded' => true,
+				'required' => false
 			))
 			->add('country', CountryType::class, array(
 				'label_attr' => array('class'=> 'sr-only'),

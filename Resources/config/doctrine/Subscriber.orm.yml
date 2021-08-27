@@ -21,6 +21,7 @@ Maci\MailerBundle\Entity\Subscriber:
             nullable: true
         sex:
             type: boolean
+            nullable: true
         mail:
             type: string
             length: 63
