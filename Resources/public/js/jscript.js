@@ -126,8 +126,14 @@ var maciMailer = function (options) {
 			},
 			url: '/mailer/get-nexts',
 			success: function(d,s,x) {
-				_obj.showList(d.list);
-				_obj.showSendMailButton();
+				if (d.end) {
+					_obj.showList([]);
+					_obj.stop();
+				}
+				else {
+					_obj.showList(d.list);
+					_obj.showSendMailButton();
+				}
 				if (sending) {
 					_obj.sendNext();
 				}
@@ -437,14 +443,14 @@ var maciMailer = function (options) {
 			return;
 		}
 		if (sending) {
-			$('<button/>').appendTo('#content').click(function(e) {
+			$('<button/>').attr('id', 'buttonSend').appendTo('#content').click(function(e) {
 				e.preventDefault();
 				$(this).remove();
 				_obj.stop();
 			}).text('Sending Mails...').attr('class', 'btn btn-info ml-auto mt-3');
 		}
 		else {
-			$('<button/>').appendTo('#content').click(function(e) {
+			$('<button/>').attr('id', 'buttonSend').appendTo('#content').click(function(e) {
 				e.preventDefault();
 				$(this).remove();
 				_obj.play();
@@ -525,12 +531,10 @@ var maciMailer = function (options) {
 	play: function() {
 		sending = true;
 		_obj.getNexts();
-		_obj.showSendMailButton();
 	},
 
 	stop: function() {
 		sending = false;
-		_obj.showSendMailButton();
 	}
 
 	}; // end _obj

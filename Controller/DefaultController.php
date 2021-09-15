@@ -171,6 +171,10 @@ class DefaultController extends AbstractController
 			}
 		}
 
+		if (!count($list)) {
+			return new JsonResponse(['success' => true, 'end' => true], 200);
+		}
+
 		return new JsonResponse(['success' => true, 'list' => $list]);
 	}
 
