@@ -249,8 +249,8 @@ class DefaultController extends AbstractController
 
 		$mail->setData($data);
 
-		// $em = $this->getDoctrine()->getManager();
-		// $em->flush();
+		$em = $this->getDoctrine()->getManager();
+		$em->flush();
 
 		return new JsonResponse(['success' => true, 'id' => $id, 'data' => $data['recipients'][$index]], 200);
 	}
