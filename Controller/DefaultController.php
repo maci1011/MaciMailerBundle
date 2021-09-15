@@ -141,6 +141,39 @@ class DefaultController extends AbstractController
 		]);
 	}
 
+	public function getNextsAction(Request $request)
+	{
+		if (!$request->isXmlHttpRequest()) {
+			return $this->redirect($this->generateUrl('homepage'));
+		}
+
+		if ($request->getMethod() !== 'POST') {
+			return new JsonResponse(['success' => false, 'error' => 'Bad Request.'], 200);
+		}
+
+		$mail = $this->getDoctrine()->getManager()
+			->getRepository('MaciMailerBundle:Mail')
+			->findOneById($request->get('id'));
+
+		if (!$mail) {
+			return new JsonResponse(['success' => false, 'error' => 'Mail not found.'], 200);
+		}
+
+		$data = $mail->getData();
+		$list = [];
+
+		for ($i=0; $i < count($data['recipients']); $i++) {
+			if ($data['recipients'][$i]['sent'] === "false") {
+				$list[count($list)] = intval($data['recipients'][$i]['id']);
+			}
+			if (7 < count($list)) {
+				break;
+			}
+		}
+
+		return new JsonResponse(['success' => true, 'list' => $list]);
+	}
+
 	public function sendNextAction(Request $request)
 	{
 		if (!$request->isXmlHttpRequest()) {
@@ -214,8 +247,10 @@ class DefaultController extends AbstractController
 		$data['recipients'][$index]['header'] = $subscriber->getHeader();
 		$data['recipients'][$index]['mail'] = $subscriber->getMail();
 
-		$em = $this->getDoctrine()->getManager();
-		$em->flush();
+		$mail->setData($data);
+
+		// $em = $this->getDoctrine()->getManager();
+		// $em->flush();
 
 		return new JsonResponse(['success' => true, 'id' => $id, 'data' => $data['recipients'][$index]], 200);
 	}
