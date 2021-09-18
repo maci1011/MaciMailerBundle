@@ -4,6 +4,7 @@ namespace Maci\MailerBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 use Symfony\Component\Validator\Constraints\IsTrue;
@@ -25,10 +26,13 @@ use Maci\TranslatorBundle\Controller\TranslatorController;
  */
 class SubscribeType extends AbstractType
 {
+	protected $request;
+
 	protected $translator;
 
-	public function __construct(TranslatorController $translator)
+	public function __construct(RequestStack $requestStack, TranslatorController $translator)
 	{
+		$this->request = $requestStack->getCurrentRequest();
 		$this->translator = $translator;
 	}
 
@@ -58,6 +62,7 @@ class SubscribeType extends AbstractType
 				'required' => false
 			))
 			->add('country', CountryType::class, array(
+				'choice_translation_locale' => $this->request->getLocale(),
 				'label_attr' => array('class'=> 'sr-only'),
 				'placeholder' => $this->translator->getLabel('form.select-country', 'Select Country'),
 				'required' => false
