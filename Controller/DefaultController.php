@@ -58,6 +58,7 @@ class DefaultController extends AbstractController
 				->findOneByMail($form->getData()->getMail());
 
 			if ($item && !$item->getRemoved()) {
+				$this->get('session')->getFlashBag()->add('danger', $this->get('maci.translator')->getText('error.subscribe-error', 'This mail cannot be added. Try with another one.'));
 				return $this->render('@MaciMailer/Mailer/subscribe.html.twig', array(
 					'form' => $form->createView()
 				));
