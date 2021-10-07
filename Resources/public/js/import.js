@@ -54,14 +54,32 @@ var maciMailerImport = function (options) {
 		form.find("#import_data").val("Importing: " + index + " of " + mails.length);
 	},
 
+	importTxt: function() {
+		mails = form.find("#import_data").val().split("\n");
+		index = 0;
+		_obj.saveNextSubscriber();
+	},
+
+	importXml: function() {
+		data = $(form.find("#import_data").val()).find('Fornitori1');
+		list = [];
+		data.each(function(i, row) {
+			row_data = {};
+			$(row).children().each(function(j, field) {
+				row_data[field['nodeName']] = $(field).text();
+			});
+			list[i] = row_data;
+		});
+		console.log(list);
+	},
+
 	set: function(_form) {
 		form = _form;
 		form.find("#import_submit").click(function(e) {
 			e.preventDefault();
 			form.find("#import_submit").hide();
-			mails = form.find("#import_data").val().split("\n");
-			index = 0;
-			_obj.saveNextSubscriber();
+			// _obj.importTxt();
+			_obj.importXml();
 		});
 	},
 
