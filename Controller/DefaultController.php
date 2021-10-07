@@ -259,4 +259,9 @@ class DefaultController extends AbstractController
 
 		return new JsonResponse(['success' => true, 'id' => $id, 'data' => $data['recipients'][$index]], 200);
 	}
+
+	public function importAction()
+	{
+		return $this->render('@MaciMailer/Mailer/import.html.twig');
+	}
 }

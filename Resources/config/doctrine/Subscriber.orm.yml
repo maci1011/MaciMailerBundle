@@ -12,6 +12,7 @@ Maci\MailerBundle\Entity\Subscriber:
         name:
             type: string
             length: 63
+            nullable: true
         surname:
             type: string
             length: 63
@@ -35,7 +36,7 @@ Maci\MailerBundle\Entity\Subscriber:
             nullable: true
         locale:
             type: string
-            length: 10
+            length: 2
         notes:
             type: text
             nullable: true
