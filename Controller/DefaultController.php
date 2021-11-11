@@ -134,7 +134,7 @@ class DefaultController extends AbstractController
 	public function confirmationEmailTemplateAction()
 	{
 		$orders = $this->getDoctrine()->getManager()
-			->getRepository('MaciOrderBundle:Order')
+			->getRepository('MaciPageBundle:Order')
 			->findBy(['status' => ['confirm', 'complete']], ['id' => 'DESC'], ['limit' => 100]);
 
 		return $this->render('@MaciOrder/Email/confirmation_email.html.twig', [
