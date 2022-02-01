@@ -354,16 +354,6 @@ class Mail
 	}
 
 	/**
-	 * Get data
-	 *
-	 * @return string
-	 */
-	public function getData()
-	{
-		return $this->data;
-	}
-
-	/**
 	 * Get default data
 	 *
 	 * @return array
@@ -376,6 +366,17 @@ class Mail
 	}
 
 	/**
+	 * Get data
+	 *
+	 * @return string
+	 */
+	public function getData()
+	{
+		if (is_null($this->data)) return $this->getDefaultData();
+		return $this->data;
+	}
+
+	/**
 	 * Reset data
 	 *
 	 * @return Mail
@@ -383,6 +384,25 @@ class Mail
 	public function resetData()
 	{
 		$this->data = $this->getDefaultData();
+
+		return $this;
+	}
+
+	public function addRecipients($list)
+	{
+		$data = $this->getData();
+		$recipients = $data['recipients'];
+
+		foreach ($list as $mail => $name) {
+			$recipients[count($recipients)] = [
+				'name' => $name,
+				'mail' => $mail,
+				'sended' => false
+			];
+		}
+
+		$data['recipients'] = $recipients;
+		$this->data = $data;
 
 		return $this;
 	}
@@ -565,6 +585,25 @@ class Mail
 		if (array_key_exists('bcc', $this->data)) {
 			$message->setBcc($this->data['bcc']);
 		}
+
+		return $message;
+	}
+	public function getSwiftMessage222()
+	{
+		$to = $this->getCurrentTo();
+
+		if (!$to) {
+			return false;
+		}
+
+		$message = (new \Swift_Message())
+			->setSubject($this->getSubject())
+			->setFrom($this->getFrom(), $this->getHeader())
+			->setTo($to[0], $to[1])
+			->setBcc($this->getBcc())
+			->setBody($this->getContent(), 'text/html')
+			->addPart($this->getText(), 'text/plain')
+		;
 
 		return $message;
 	}
