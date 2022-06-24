@@ -20,9 +20,13 @@ maci_mailer_import:
     defaults: { _controller: MaciMailerBundle:Default:import, section: mails }
 
 
-maci_mailer_templates_confirmation_email:
-    path:     /mailer/templates/confirmation-email
-    defaults: { _controller: MaciMailerBundle:Default:confirmationEmailTemplate }
+maci_mailer_templates_order_confirmed:
+    path:     /mailer/templates/order_confirmed
+    defaults: { _controller: MaciMailerBundle:Default:orderConfirmedTemplate }
+
+maci_mailer_templates_order_shipped:
+    path:     /mailer/templates/order_shipped
+    defaults: { _controller: MaciMailerBundle:Default:orderShippedTemplate }
 
 maci_mailer_templates:
     path:     /mailer/templates

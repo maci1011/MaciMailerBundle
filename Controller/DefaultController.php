@@ -131,15 +131,27 @@ class DefaultController extends AbstractController
 		]);
 	}
 
-	public function confirmationEmailTemplateAction()
+	public function orderConfirmedTemplateAction()
+	{
+		return $this->render('@MaciPage/Email/order_confirmed.html.twig', [
+			'order' => $this->getARandomOrder()
+		]);
+	}
+
+	public function orderShippedTemplateAction()
+	{
+		return $this->render('@MaciPage/Email/order_shipped.html.twig', [
+			'order' => $this->getARandomOrder()
+		]);
+	}
+
+	public function getARandomOrder()
 	{
 		$orders = $this->getDoctrine()->getManager()
 			->getRepository('MaciPageBundle:Order\Order')
-			->findBy(['status' => ['confirm', 'complete']], ['id' => 'DESC'], ['limit' => 100]);
+			->findBy(['status' => ['confirm', 'complete']], ['id' => 'DESC']);
 
-		return $this->render('@MaciPage/Email/confirmation_email.html.twig', [
-			'order' => $orders[rand(0,count($orders) - 1)]
-		]);
+		return $orders[rand(0,count($orders) - 1)];
 	}
 
 	public function getNextsAction(Request $request)
