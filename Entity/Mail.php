@@ -390,21 +390,29 @@ class Mail
 
 	public function addRecipients($list)
 	{
-		$data = $this->getData();
-		$recipients = $data['recipients'];
+		$recipients = $this->getRecipients();
 
 		foreach ($list as $mail => $name) {
-			$recipients[count($recipients)] = [
+			array_push($recipients, [
 				'name' => $name,
 				'mail' => $mail,
 				'sended' => false
-			];
+			]);
 		}
 
-		$data['recipients'] = $recipients;
-		$this->data = $data;
+		$this->data['recipients'] = $recipients;
 
 		return $this;
+	}
+
+	public function getRecipients()
+	{
+		$data = $this->getData();
+
+		if (!is_array($data))
+			$this->data = [];
+
+		return array_key_exists('recipients', $data) ? $data['recipients'] : [];
 	}
 
 	/**
@@ -564,49 +572,53 @@ class Mail
 
 	public function getSwiftMessage()
 	{
-		$message = (new \Swift_Message())
-			->setSubject($this->subject)
-			->setFrom($this->sender, $this->header)
-		;
+		$message = (new \Swift_Message());
 
-		if ($this->sender) {
+		if ($this->subject)
+			$message->setSubject($this->subject);
+
+		if ($this->sender)
 			$message->setFrom($this->sender, $this->header);
-		}
 
-		if ($this->content) {
+		$recipients = $this->getRecipients();
+
+		foreach ($recipients as $recipient)
+			$message->addTo($recipient['mail'], $recipient['name']);
+
+		if ($this->content)
+		{
 			$message->setBody($this->content, 'text/html');
-			if ($this->text) {
+			if ($this->text)
 				$message->addPart($this->text, 'text/plain');
-			}
-		} else if ($this->text) {
+		}
+		else if ($this->text)
 			$message->setBody($this->text, 'text/plain');
-		}
 
-		if (array_key_exists('bcc', $this->data)) {
+		if (array_key_exists('bcc', $this->data))
 			$message->setBcc($this->data['bcc']);
-		}
 
 		return $message;
 	}
-	public function getSwiftMessage222()
-	{
-		$to = $this->getCurrentTo();
 
-		if (!$to) {
-			return false;
-		}
+	// public function getSwiftMessage()
+	// {
+	// 	$to = $this->getCurrentTo();
 
-		$message = (new \Swift_Message())
-			->setSubject($this->getSubject())
-			->setFrom($this->getFrom(), $this->getHeader())
-			->setTo($to[0], $to[1])
-			->setBcc($this->getBcc())
-			->setBody($this->getContent(), 'text/html')
-			->addPart($this->getText(), 'text/plain')
-		;
+	// 	if (!$to) {
+	// 		return false;
+	// 	}
 
-		return $message;
-	}
+	// 	$message = (new \Swift_Message())
+	// 		->setSubject($this->getSubject())
+	// 		->setFrom($this->getFrom(), $this->getHeader())
+	// 		->setTo($to[0], $to[1])
+	// 		->setBcc($this->getBcc())
+	// 		->setBody($this->getContent(), 'text/html')
+	// 		->addPart($this->getText(), 'text/plain')
+	// 	;
+
+	// 	return $message;
+	// }
 
 	/**
 	 * toString()
