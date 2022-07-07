@@ -597,8 +597,6 @@ class Mail
 		if (array_key_exists('bcc', $this->data))
 			$message->setBcc($this->data['bcc']);
 
-
-
 		return $message;
 	}
 
